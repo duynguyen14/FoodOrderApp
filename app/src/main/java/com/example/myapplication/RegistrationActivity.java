@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +49,10 @@ public class RegistrationActivity extends AppCompatActivity {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin!");
             return;
         }
+        if (!isValidEmail(email)) {
+            showAlert("Lỗi", "Email không hợp lệ");
+            return;
+        }
 
         // Gọi DB Helper để lưu
         long result = databaseHelper.insertUser(username, email, password, "", "", role);
@@ -65,4 +70,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 .setPositiveButton("OK", null)
                 .show();
     }
+    private boolean isValidEmail(String email) {
+        return email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
 }
