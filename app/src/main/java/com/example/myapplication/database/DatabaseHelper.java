@@ -41,6 +41,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_FOOD_PRICE = "Price";
     public static final String COLUMN_FOOD_IMAGE = "Image";
     public static final String COLUMN_FOOD_DESCRIPTION = "Description";
+    public static final String COLUMN_FOOD_QUANTITY = "Quantity";
+    public static final String COLUMN_FOOD_SOLID_COUNT = "SolidCount";
+
 
     // ------------------ SHOPPING CART ------------------
     public static final String TABLE_CART = "shoppingcart";
@@ -65,6 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_BILL_DATE = "BillDate";
     public static final String COLUMN_BILL_TOTAL = "TotalAmount";
 
+    public static  final  String COLUMN_BILL_STATUS ="status";
     public static final String TABLE_BILL_DETAIL = "billdetail";
     public static final String COLUMN_BILL_DETAIL_ID = "BillDetailID";
     public static final String COLUMN_BILL_DETAIL_QUANTITY = "Quantity";
@@ -105,6 +109,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_PRICE + " REAL, " +
                 COLUMN_FOOD_IMAGE + " TEXT, " +
                 COLUMN_FOOD_DESCRIPTION + " TEXT, " +
+                COLUMN_FOOD_QUANTITY + " TEXT, " +
+                COLUMN_FOOD_SOLID_COUNT + " TEXT, " +
                 "FOREIGN KEY(" + COLUMN_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COLUMN_CATEGORY_ID + "))");
 
         // SHOPPING CART
@@ -146,6 +152,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_ID + " INTEGER, " +
                 COLUMN_BILL_DATE + " TEXT, " +
                 COLUMN_BILL_TOTAL + " REAL, " +
+                COLUMN_BILL_STATUS + " TEXT, " +
                 "FOREIGN KEY(" + COLUMN_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "))");
 
         // BILL DETAIL
@@ -192,6 +199,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getUserById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.query(TABLE_USER, null, COLUMN_USER_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+    }
+    // Lấy user theo Email
+    public Cursor findUserByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(
+                TABLE_USER,
+                null, // Lấy tất cả các cột
+                COLUMN_USER_EMAIL + "=?",
+                new String[]{email},
+                null,
+                null,
+                null
+        );
     }
 
     public int updateUser(int id, String username, String email, String password, String gender, String dob, String role) {
