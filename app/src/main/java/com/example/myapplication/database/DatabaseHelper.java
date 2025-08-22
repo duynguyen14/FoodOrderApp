@@ -1,14 +1,22 @@
 package com.example.myapplication.database;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.myapplication.R;
+import com.example.myapplication.models.HomeHorModel;
+import com.example.myapplication.models.HomeVerModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "app_db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 7;
 
     // Bảng Users
     public static final String TABLE_USER = "users";
@@ -33,6 +41,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_CATEGORY = "category";
     public static final String COLUMN_CATEGORY_ID = "CategoryID";
     public static final String COLUMN_CATEGORY_NAME = "CategoryName";
+    public static final String COLUMN_CATEGORY_IMAGE = "CategoryImage";
+
 
     // ------------------ FOOD ------------------
     public static final String TABLE_FOOD = "food";
@@ -40,6 +50,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_FOOD_NAME = "FoodName";
     public static final String COLUMN_FOOD_PRICE = "Price";
     public static final String COLUMN_FOOD_IMAGE = "Image";
+    public static final String COLUMN_FOOD_TIME = "Time";
+
     public static final String COLUMN_FOOD_DESCRIPTION = "Description";
     public static final String COLUMN_FOOD_QUANTITY = "Quantity";
     public static final String COLUMN_FOOD_SOLID_COUNT = "SolidCount";
@@ -87,6 +99,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_GENDER + " TEXT, " +
                 COLUMN_USER_DOB + " TEXT, " +
                 COLUMN_USER_ROLE + " TEXT)");
+// User Admin
+        db.execSQL("INSERT INTO " + TABLE_USER + " (" +
+                COLUMN_USER_USERNAME + "," +
+                COLUMN_USER_EMAIL + "," +
+                COLUMN_USER_PASSWORD + "," +
+                COLUMN_USER_GENDER + "," +
+                COLUMN_USER_DOB + "," +
+                COLUMN_USER_ROLE +
+                ") VALUES ('admin','admin@gmail.com','123456','Male','1990-01-01','ADMIN')");
+
+// User thường
+        db.execSQL("INSERT INTO " + TABLE_USER + " (" +
+                COLUMN_USER_USERNAME + "," +
+                COLUMN_USER_EMAIL + "," +
+                COLUMN_USER_PASSWORD + "," +
+                COLUMN_USER_GENDER + "," +
+                COLUMN_USER_DOB + "," +
+                COLUMN_USER_ROLE +
+                ") VALUES ('duy','duy@gmail.com','123456','Female','1995-05-20','USER')");
+
+//        ADDRESS
         db.execSQL("CREATE TABLE " + TABLE_ADDRESS + " (" +
                 COLUMN_ADDRESS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_USER_ID + " INTEGER, " +
@@ -99,7 +132,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // CATEGORY
         db.execSQL("CREATE TABLE " + TABLE_CATEGORY + " (" +
                 COLUMN_CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_CATEGORY_NAME + " TEXT)");
+                COLUMN_CATEGORY_NAME + " TEXT, " +
+                COLUMN_CATEGORY_IMAGE + " INTEGER)");
+        db.execSQL("INSERT INTO " + TABLE_CATEGORY + " (" +
+                COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_IMAGE +
+                ") VALUES ('Pizza', " + R.drawable.pizza + ")");
+
+        db.execSQL("INSERT INTO " + TABLE_CATEGORY + " (" +
+                COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_IMAGE +
+                ") VALUES ('HamBurger', " + R.drawable.hamburger + ")");
+
+        db.execSQL("INSERT INTO " + TABLE_CATEGORY + " (" +
+                COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_IMAGE +
+                ") VALUES ('Fries', " + R.drawable.fried_potatoes + ")");
+
+        db.execSQL("INSERT INTO " + TABLE_CATEGORY + " (" +
+                COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_IMAGE +
+                ") VALUES ('Cream', " + R.drawable.ice_cream + ")");
+
+        db.execSQL("INSERT INTO " + TABLE_CATEGORY + " (" +
+                COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_IMAGE +
+                ") VALUES ('Sandwich', " + R.drawable.sandwich + ")");
+
+
+
 
         // FOOD
         db.execSQL("CREATE TABLE " + TABLE_FOOD + " (" +
@@ -107,11 +163,184 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_CATEGORY_ID + " INTEGER, " +
                 COLUMN_FOOD_NAME + " TEXT, " +
                 COLUMN_FOOD_PRICE + " REAL, " +
-                COLUMN_FOOD_IMAGE + " TEXT, " +
+                COLUMN_FOOD_IMAGE + " INTEGER, " +
+                COLUMN_FOOD_TIME + " TEXT, " +
                 COLUMN_FOOD_DESCRIPTION + " TEXT, " +
                 COLUMN_FOOD_QUANTITY + " TEXT, " +
                 COLUMN_FOOD_SOLID_COUNT + " TEXT, " +
                 "FOREIGN KEY(" + COLUMN_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COLUMN_CATEGORY_ID + "))");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (1, 'Pizza', 34.0, " + R.drawable.pizza1 + ", '10:00-23:00', 'Delicious cheese pizza', '1', '0')");
+
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (1, 'Pizza', 34.0, " + R.drawable.pizza2 + ", '10:00-23:00', 'Delicious cheese pizza', '1', '0')");
+
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (1, 'Pizza', 34.0, " + R.drawable.pizza3 + ", '10:00-23:00', 'Delicious cheese pizza', '1', '0')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (2, 'HamBurger', 34.0, " + R.drawable.burger2 + ", '10:00-23:00', 'Delicious cheese hambuger', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (2, 'HamBurger', 34.0, " + R.drawable.burger4 + ", '10:00-23:00', 'Delicious cheese hambuger', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (3, 'Fries', 34.0, " + R.drawable.fries1 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (3, 'Fries', 34.0, " + R.drawable.fries2 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (3, 'Fries', 34.0, " + R.drawable.fries3 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (3, 'Fries', 34.0, " + R.drawable.fries4 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (4, 'Cream', 34.0, " + R.drawable.icecream1 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (4, 'Cream', 34.0, " + R.drawable.icecream2 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (4, 'Cream', 34.0, " + R.drawable.icecream3 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (4, 'Cream', 34.0, " + R.drawable.icecream4 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (5, 'Sandwich', 34.0, " + R.drawable.sandwich1 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (5, 'Sandwich', 34.0, " + R.drawable.sandwich2 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (5, 'Sandwich', 34.0, " + R.drawable.sandwich3 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + ", " +
+                COLUMN_FOOD_NAME + ", " +
+                COLUMN_FOOD_PRICE + ", " +
+                COLUMN_FOOD_IMAGE + ", " +
+                COLUMN_FOOD_TIME + ", " +
+                COLUMN_FOOD_DESCRIPTION + ", " +
+                COLUMN_FOOD_QUANTITY + ", " +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (5, 'Sandwich', 34.0, " + R.drawable.sandwich4 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
 
         // SHOPPING CART
         db.execSQL("CREATE TABLE " + TABLE_CART + " (" +
@@ -137,6 +366,95 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_REVIEW_COMMENT + " TEXT, " +
                 "FOREIGN KEY(" + COLUMN_USER_ID + ") REFERENCES " + TABLE_USER + "(" + COLUMN_USER_ID + "), " +
                 "FOREIGN KEY(" + COLUMN_FOOD_ID + ") REFERENCES " + TABLE_FOOD + "(" + COLUMN_FOOD_ID + "))");
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (1, 1, 5, 'Pizza rất ngon, phô mai béo ngậy!')");
+
+// User 2 (role admin) đánh giá Pizza1
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (2, 1, 4, 'Pizza ổn nhưng hơi nhiều dầu.')");
+
+// User 1 đánh giá Pizza2
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (1, 2, 5, 'Pizza2 giòn rụm, rất tuyệt vời!')");
+
+// User 2 đánh giá Pizza3
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (2, 3, 3, 'Pizza3 bình thường, chưa đặc biệt.')");
+        // ===== Thêm review cho Hamburger =====
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (1, 4, 5, 'Hamburger rất ngon, thịt mềm và thơm!')");
+
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (2, 5, 4, 'Burger ổn nhưng hơi nhiều sốt.')");
+
+// ===== Thêm review cho Fries =====
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (1, 6, 5, 'Khoai tây chiên giòn rụm, siêu ngon!')");
+
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (2, 7, 3, 'Khoai tây hơi ỉu, chưa ngon lắm.')");
+
+// ===== Thêm review cho Cream =====
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (1, 9, 5, 'Kem mát lạnh, ngọt vừa đủ!')");
+
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (2, 10, 4, 'Kem ngon nhưng hơi ngọt so với mình.')");
+
+// ===== Thêm review cho Sandwich =====
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (1, 13, 4, 'Sandwich mềm, nhân nhiều, khá ngon!')");
+
+        db.execSQL("INSERT INTO " + TABLE_REVIEW + " (" +
+                COLUMN_USER_ID + ", " +
+                COLUMN_FOOD_ID + ", " +
+                COLUMN_REVIEW_RATING + ", " +
+                COLUMN_REVIEW_COMMENT +
+                ") VALUES (2, 14, 5, 'Sandwich tuyệt vời, rất hợp khẩu vị mình!')");
 
         // FAVORITE FOOD
         db.execSQL("CREATE TABLE " + TABLE_FAVORITE + " (" +
@@ -231,4 +549,67 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_USER, COLUMN_USER_ID + "=?", new String[]{String.valueOf(id)});
     }
+
+    public long insertCategory(String name, int imageResId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_NAME, name);
+        values.put(COLUMN_CATEGORY_IMAGE, imageResId);
+        return db.insert(TABLE_CATEGORY, null, values);
+    }
+    public ArrayList<HomeHorModel> getAllCategoriesList() {
+        ArrayList<HomeHorModel> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_CATEGORY, null, null, null, null, null, COLUMN_CATEGORY_ID + " ASC");
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_NAME));
+                int imageRes = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_IMAGE));
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY_ID));
+                list.add(new HomeHorModel(imageRes, name,id));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return list;
+    }
+    public ArrayList<HomeVerModel> getAllFoodWithCategory(int categoryId) {
+        ArrayList<HomeVerModel> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT f." + COLUMN_FOOD_NAME + ", "
+                + "f." + COLUMN_FOOD_IMAGE + ", "
+                + "f." + COLUMN_FOOD_TIME + ", "
+                + "f." + COLUMN_FOOD_PRICE + ", "
+                + "IFNULL(AVG(r." + COLUMN_REVIEW_RATING + "), 0) AS avg_rating " +
+                "FROM " + TABLE_FOOD + " f " +
+                "LEFT JOIN " + TABLE_REVIEW + " r " +
+                "ON f." + COLUMN_FOOD_ID + " = r." + COLUMN_FOOD_ID + " " +
+                "WHERE f." + COLUMN_CATEGORY_ID + " = ? " +   // lọc theo categoryId
+                "GROUP BY f." + COLUMN_FOOD_ID + ", f." + COLUMN_FOOD_NAME + ", f." + COLUMN_FOOD_IMAGE + ", f." + COLUMN_FOOD_TIME + ", f." + COLUMN_FOOD_PRICE + " " +
+                "ORDER BY f." + COLUMN_FOOD_ID + " ASC";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(categoryId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FOOD_NAME));
+                int image = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FOOD_IMAGE));
+                String time = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FOOD_TIME));
+                double priceValue = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_FOOD_PRICE));
+                double avgRating = cursor.getDouble(cursor.getColumnIndexOrThrow("avg_rating"));
+
+                @SuppressLint("DefaultLocale")
+                String rating = String.format("%.1f", avgRating);
+                String price = "Min- " + priceValue + "$";
+
+                list.add(new HomeVerModel(image, name, time, rating, price));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return list;
+    }
+
+
 }
