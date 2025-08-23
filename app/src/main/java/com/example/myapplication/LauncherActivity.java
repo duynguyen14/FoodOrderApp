@@ -16,8 +16,14 @@ public class LauncherActivity extends AppCompatActivity {
 
         Intent intent;
         if (isLoggedIn) {
-            // Nếu đã đăng nhập -> vào thẳng MainActivity
-            intent = new Intent(this, MainActivity.class);
+//            // Nếu đã đăng nhập -> vào thẳng MainActivity
+//            intent = new Intent(this, MainActivity.class);
+            String role = sharedPref.getString("role", "user"); // mặc định user
+            if ("admin".equalsIgnoreCase(role)) {
+                intent = new Intent(this, AdminActivity.class);
+            } else {
+                intent = new Intent(this, MainActivity.class);
+            }
         } else {
             // Nếu chưa đăng nhập -> vào WelcomeActivity
             intent = new Intent(this, WelcomeActivity.class);
