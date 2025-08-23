@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_revenue"
+            android:title="Thống kê doanh thu" />
+        <item
+            android:id="@+id/nav_account_management"
+            android:title="Quản lý tài khoản" />
+        <item
+            android:id="@+id/nav_product_management"
+            android:title="Quản lý sản phẩm" />
+        <item
+            android:id="@+id/nav_order_management"
+            android:title="Quản lý đơn hàng" />
+    </group>
+</menu>

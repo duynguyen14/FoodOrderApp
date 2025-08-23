@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -59,6 +61,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         if (result != -1) {
             showAlert("Thành công", "Đăng ký thành công!");
+            startActivity(new Intent(RegistrationActivity.this,LoginActivity.class));
         } else {
             showAlert("Lỗi", "Đăng ký thất bại! Email có thể đã tồn tại.");
         }
@@ -72,6 +75,9 @@ public class RegistrationActivity extends AppCompatActivity {
     }
     private boolean isValidEmail(String email) {
         return email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+    public void login(View view){
+        startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
     }
 
 }
