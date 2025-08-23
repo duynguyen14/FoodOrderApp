@@ -1,5 +1,5 @@
 package com.example.myapplication.database;
-
+import com.example.myapplication.R;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,7 +9,7 @@ import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "app_db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 16;
 
     // Bảng Users
     public static final String TABLE_USER = "users";
@@ -43,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_FOOD_IMAGE = "Image";
     public static final String COLUMN_FOOD_DESCRIPTION = "Description";
     public static final String COLUMN_FOOD_QUANTITY = "Quantity";
-    public static final String COLUMN_FOOD_SOLID_COUNT = "SolidCount";
+    public static final String COLUMN_FOOD_SOLD_COUNT = "SoldCount";
 
 
     // ------------------ SHOPPING CART ------------------
@@ -76,8 +76,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        int imageResId1 = R.drawable.breakfast;
+        int imageResId2 = R.drawable.burger2;
+        int imageResId3 = R.drawable.burger4;
+        int imageResId4 = R.drawable.coffe;
+
         db.execSQL("PRAGMA foreign_keys=ON");
         // USERS
         db.execSQL("CREATE TABLE " + TABLE_USER + " (" +
@@ -128,10 +135,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_CATEGORY_ID + " INTEGER, " +
                 COLUMN_FOOD_NAME + " TEXT, " +
                 COLUMN_FOOD_PRICE + " REAL, " +
-                COLUMN_FOOD_IMAGE + " TEXT, " +
+                COLUMN_FOOD_IMAGE + " INTEGER, " +
                 COLUMN_FOOD_DESCRIPTION + " TEXT, " +
                 COLUMN_FOOD_QUANTITY + " TEXT, " +
-                COLUMN_FOOD_SOLID_COUNT + " TEXT, " +
+                COLUMN_FOOD_SOLD_COUNT + " TEXT, " +
                 "FOREIGN KEY(" + COLUMN_CATEGORY_ID + ") REFERENCES " + TABLE_CATEGORY + "(" + COLUMN_CATEGORY_ID + "))");
 
         // SHOPPING CART
@@ -230,16 +237,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + TABLE_CATEGORY + " (" + COLUMN_CATEGORY_NAME + ") VALUES ('Bánh')");
         db.execSQL("INSERT INTO " + TABLE_CATEGORY + " (" + COLUMN_CATEGORY_NAME + ") VALUES ('Tráng miệng')");
 
-// ========== FOOD ==========
-        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
-                COLUMN_CATEGORY_ID + "," +
-                COLUMN_FOOD_NAME + "," +
-                COLUMN_FOOD_PRICE + "," +
-                COLUMN_FOOD_IMAGE + "," +
-                COLUMN_FOOD_DESCRIPTION + "," +
-                COLUMN_FOOD_QUANTITY + "," +
-                COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (1,'Phở bò',50000,'pho_bo.png','Phở bò thơm ngon đặc biệt','100','20')");
+//// ========== FOOD ==========
 
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + "," +
@@ -248,8 +246,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_IMAGE + "," +
                 COLUMN_FOOD_DESCRIPTION + "," +
                 COLUMN_FOOD_QUANTITY + "," +
-                COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (2,'Nước cam',30000,'nuoc_cam.png','Nước cam tươi mát lạnh','200','50')");
+                COLUMN_FOOD_SOLD_COUNT +
+                ") VALUES (1,'Phở bò',50000," + imageResId1 + ",'Phở bò thơm ngon đặc biệt','100','20')");
 
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + "," +
@@ -258,8 +256,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_IMAGE + "," +
                 COLUMN_FOOD_DESCRIPTION + "," +
                 COLUMN_FOOD_QUANTITY + "," +
-                COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (3,'Bánh mì thịt',20000,'banh_mi.png','Bánh mì thịt nóng giòn','150','40')");
+                COLUMN_FOOD_SOLD_COUNT +
+                ") VALUES (2,'Nước cam',30000," + imageResId2 + ",'Nước cam tươi mát lạnh','200','50')");
 
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + "," +
@@ -268,8 +266,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_IMAGE + "," +
                 COLUMN_FOOD_DESCRIPTION + "," +
                 COLUMN_FOOD_QUANTITY + "," +
-                COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (4,'Chè đậu xanh',25000,'che_dau.png','Chè đậu xanh ngọt mát','120','30')");
+                COLUMN_FOOD_SOLD_COUNT +
+                ") VALUES (3,'Bánh mì thịt',20000, " + imageResId3 + ",'Bánh mì thịt nóng giòn','150','40')");
+
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + "," +
+                COLUMN_FOOD_NAME + "," +
+                COLUMN_FOOD_PRICE + "," +
+                COLUMN_FOOD_IMAGE + "," +
+                COLUMN_FOOD_DESCRIPTION + "," +
+                COLUMN_FOOD_QUANTITY + "," +
+                COLUMN_FOOD_SOLD_COUNT +
+                ") VALUES (4,'Chè đậu xanh',25000, " + imageResId4 + " ,'Chè đậu xanh ngọt mát','120','30')");
 
 // ========== BILL ==========
         db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
@@ -352,7 +360,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
                 COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
                 ") VALUES (10,2,1)");
-
 
     }
 
@@ -490,225 +497,365 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Trong DatabaseHelper.java
-    public boolean insertSampleData() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            // Chèn dữ liệu vào bảng users
-            ContentValues userValues = new ContentValues();
-            userValues.put(COLUMN_USER_USERNAME, "NguyenVanA");
-            userValues.put(COLUMN_USER_EMAIL, "nguyenvana@example.com");
-            userValues.put(COLUMN_USER_PASSWORD, "password123");
-            userValues.put(COLUMN_USER_GENDER, "Nam");
-            userValues.put(COLUMN_USER_DOB, "1990-01-01");
-            userValues.put(COLUMN_USER_ROLE, "user");
-            long userId1 = db.insertOrThrow(TABLE_USER, null, userValues);
-            if (userId1 == -1) return false;
+//    public boolean insertSampleData() {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        try {
+//            // Chèn dữ liệu vào bảng users
+//            ContentValues userValues = new ContentValues();
+//            userValues.put(COLUMN_USER_USERNAME, "NguyenVanA");
+//            userValues.put(COLUMN_USER_EMAIL, "nguyenvana@example.com");
+//            userValues.put(COLUMN_USER_PASSWORD, "password123");
+//            userValues.put(COLUMN_USER_GENDER, "Nam");
+//            userValues.put(COLUMN_USER_DOB, "1990-01-01");
+//            userValues.put(COLUMN_USER_ROLE, "user");
+//            long userId1 = db.insertOrThrow(TABLE_USER, null, userValues);
+//            if (userId1 == -1) return false;
+//
+//            userValues.clear();
+//            userValues.put(COLUMN_USER_USERNAME, "TranThiB");
+//            userValues.put(COLUMN_USER_EMAIL, "tranthib@example.com");
+//            userValues.put(COLUMN_USER_PASSWORD, "password456");
+//            userValues.put(COLUMN_USER_GENDER, "Nữ");
+//            userValues.put(COLUMN_USER_DOB, "1995-05-10");
+//            userValues.put(COLUMN_USER_ROLE, "user");
+//            long userId2 = db.insertOrThrow(TABLE_USER, null, userValues);
+//            if (userId2 == -1) return false;
+//
+//            // Chèn dữ liệu vào bảng category
+//            ContentValues categoryValues = new ContentValues();
+//            categoryValues.put(COLUMN_CATEGORY_NAME, "Món chính");
+//            long categoryId1 = db.insertOrThrow(TABLE_CATEGORY, null, categoryValues);
+//            if (categoryId1 == -1) return false;
+//
+//            categoryValues.clear();
+//            categoryValues.put(COLUMN_CATEGORY_NAME, "Đồ uống");
+//            long categoryId2 = db.insertOrThrow(TABLE_CATEGORY, null, categoryValues);
+//            if (categoryId2 == -1) return false;
+//
+//            // Chèn dữ liệu vào bảng food
+//            ContentValues foodValues = new ContentValues();
+//            foodValues.put(COLUMN_CATEGORY_ID, categoryId1);
+//            foodValues.put(COLUMN_FOOD_NAME, "Phở bò");
+//            foodValues.put(COLUMN_FOOD_PRICE, 50000.0);
+//            foodValues.put(COLUMN_FOOD_IMAGE, "pho_bo.jpg");
+//            foodValues.put(COLUMN_FOOD_DESCRIPTION, "Phở bò thơm ngon");
+//            foodValues.put(COLUMN_FOOD_QUANTITY, "100"); // Lưu ý: TEXT trong lược đồ
+//            foodValues.put(COLUMN_FOOD_SOLID_COUNT, "50");
+//            long foodId1 = db.insertOrThrow(TABLE_FOOD, null, foodValues);
+//            if (foodId1 == -1) return false;
+//
+//            foodValues.clear();
+//            foodValues.put(COLUMN_CATEGORY_ID, categoryId2);
+//            foodValues.put(COLUMN_FOOD_NAME, "Nước cam");
+//            foodValues.put(COLUMN_FOOD_PRICE, 20000.0);
+//            foodValues.put(COLUMN_FOOD_IMAGE, "nuoc_cam.jpg");
+//            foodValues.put(COLUMN_FOOD_DESCRIPTION, "Nước cam tươi");
+//            foodValues.put(COLUMN_FOOD_QUANTITY, "200");
+//            foodValues.put(COLUMN_FOOD_SOLID_COUNT, "100");
+//            long foodId2 = db.insertOrThrow(TABLE_FOOD, null, foodValues);
+//            if (foodId2 == -1) return false;
+//
+//            // Chèn dữ liệu vào bảng bill
+//            ContentValues billValues = new ContentValues();
+//            billValues.put(COLUMN_USER_ID, userId1);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-20");
+//            billValues.put(COLUMN_BILL_TOTAL, 150000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Chờ xác nhận");
+//            long billId1 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId1 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId2);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-21");
+//            billValues.put(COLUMN_BILL_TOTAL, 80000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Xác nhận");
+//            long billId2 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId2 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId1);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-22");
+//            billValues.put(COLUMN_BILL_TOTAL, 220000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Đang giao");
+//            long billId3 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId3 == -1) return false;
+//
+//
+//            // Sau billId3 bạn thêm vào
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId2);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-23");
+//            billValues.put(COLUMN_BILL_TOTAL, 120000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Đã giao");
+//            long billId4 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId4 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId1);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-24");
+//            billValues.put(COLUMN_BILL_TOTAL, 90000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Hủy");
+//            long billId5 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId5 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId2);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-25");
+//            billValues.put(COLUMN_BILL_TOTAL, 450000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Chờ xác nhận");
+//            long billId6 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId6 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId1);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-26");
+//            billValues.put(COLUMN_BILL_TOTAL, 300000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Xác nhận");
+//            long billId7 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId7 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId2);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-27");
+//            billValues.put(COLUMN_BILL_TOTAL, 270000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Đang giao");
+//            long billId8 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId8 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId1);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-28");
+//            billValues.put(COLUMN_BILL_TOTAL, 110000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Đã giao");
+//            long billId9 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId9 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId2);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-29");
+//            billValues.put(COLUMN_BILL_TOTAL, 60000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Chờ xác nhận");
+//            long billId10 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId10 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId1);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-30");
+//            billValues.put(COLUMN_BILL_TOTAL, 190000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Xác nhận");
+//            long billId11 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId11 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId2);
+//            billValues.put(COLUMN_BILL_DATE, "2025-08-31");
+//            billValues.put(COLUMN_BILL_TOTAL, 250000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Đang giao");
+//            long billId12 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId12 == -1) return false;
+//
+//            billValues.clear();
+//            billValues.put(COLUMN_USER_ID, userId1);
+//            billValues.put(COLUMN_BILL_DATE, "2025-09-01");
+//            billValues.put(COLUMN_BILL_TOTAL, 130000.0);
+//            billValues.put(COLUMN_BILL_STATUS, "Đã giao");
+//            long billId13 = db.insertOrThrow(TABLE_BILL, null, billValues);
+//            if (billId13 == -1) return false;
+//
+//// Thêm chi tiết cho các bill vừa tạo
+//            long[] newBills = {billId4, billId5, billId6, billId7, billId8, billId9, billId10, billId11, billId12, billId13};
+//
+//            for (long bId : newBills) {
+//                ContentValues detail = new ContentValues();
+//                detail.put(COLUMN_BILL_ID, bId);
+//                detail.put(COLUMN_FOOD_ID, foodId1);
+//                detail.put(COLUMN_BILL_DETAIL_QUANTITY, 1);
+//                if (db.insertOrThrow(TABLE_BILL_DETAIL, null, detail) == -1) return false;
+//
+//                detail.clear();
+//                detail.put(COLUMN_BILL_ID, bId);
+//                detail.put(COLUMN_FOOD_ID, foodId2);
+//                detail.put(COLUMN_BILL_DETAIL_QUANTITY, 2);
+//                if (db.insertOrThrow(TABLE_BILL_DETAIL, null, detail) == -1) return false;
+//            }
+//
+//
+//            // Chèn dữ liệu vào bảng billdetail
+//            ContentValues billDetailValues = new ContentValues();
+//            billDetailValues.put(COLUMN_BILL_ID, billId1);
+//            billDetailValues.put(COLUMN_FOOD_ID, foodId1);
+//            billDetailValues.put(COLUMN_BILL_DETAIL_QUANTITY, 3);
+//            long detailId1 = db.insertOrThrow(TABLE_BILL_DETAIL, null, billDetailValues);
+//            if (detailId1 == -1) return false;
+//
+//            billDetailValues.clear();
+//            billDetailValues.put(COLUMN_BILL_ID, billId2);
+//            billDetailValues.put(COLUMN_FOOD_ID, foodId2);
+//            billDetailValues.put(COLUMN_BILL_DETAIL_QUANTITY, 4);
+//            long detailId2 = db.insertOrThrow(TABLE_BILL_DETAIL, null, billDetailValues);
+//            if (detailId2 == -1) return false;
+//
+//            billDetailValues.clear();
+//            billDetailValues.put(COLUMN_BILL_ID, billId3);
+//            billDetailValues.put(COLUMN_FOOD_ID, foodId1);
+//            billDetailValues.put(COLUMN_BILL_DETAIL_QUANTITY, 2);
+//            long detailId3 = db.insertOrThrow(TABLE_BILL_DETAIL, null, billDetailValues);
+//            if (detailId3 == -1) return false;
+//
+//            billDetailValues.clear();
+//            billDetailValues.put(COLUMN_BILL_ID, billId3);
+//            billDetailValues.put(COLUMN_FOOD_ID, foodId2);
+//            billDetailValues.put(COLUMN_BILL_DETAIL_QUANTITY, 3);
+//            long detailId4 = db.insertOrThrow(TABLE_BILL_DETAIL, null, billDetailValues);
+//            if (detailId4 == -1) return false;
+//
+//            return true;
+//        } catch (Exception e) {
+//            // Ghi log lỗi để kiểm tra
+//            android.util.Log.e("DatabaseHelper", "Error inserting sample data: " + e.getMessage());
+//            return false;
+//        } finally {
+//            db.close();
+//        }
+//    }
 
-            userValues.clear();
-            userValues.put(COLUMN_USER_USERNAME, "TranThiB");
-            userValues.put(COLUMN_USER_EMAIL, "tranthib@example.com");
-            userValues.put(COLUMN_USER_PASSWORD, "password456");
-            userValues.put(COLUMN_USER_GENDER, "Nữ");
-            userValues.put(COLUMN_USER_DOB, "1995-05-10");
-            userValues.put(COLUMN_USER_ROLE, "user");
-            long userId2 = db.insertOrThrow(TABLE_USER, null, userValues);
-            if (userId2 == -1) return false;
 
-            // Chèn dữ liệu vào bảng category
-            ContentValues categoryValues = new ContentValues();
-            categoryValues.put(COLUMN_CATEGORY_NAME, "Món chính");
-            long categoryId1 = db.insertOrThrow(TABLE_CATEGORY, null, categoryValues);
-            if (categoryId1 == -1) return false;
+    // duy trinh
 
-            categoryValues.clear();
-            categoryValues.put(COLUMN_CATEGORY_NAME, "Đồ uống");
-            long categoryId2 = db.insertOrThrow(TABLE_CATEGORY, null, categoryValues);
-            if (categoryId2 == -1) return false;
-
-            // Chèn dữ liệu vào bảng food
-            ContentValues foodValues = new ContentValues();
-            foodValues.put(COLUMN_CATEGORY_ID, categoryId1);
-            foodValues.put(COLUMN_FOOD_NAME, "Phở bò");
-            foodValues.put(COLUMN_FOOD_PRICE, 50000.0);
-            foodValues.put(COLUMN_FOOD_IMAGE, "pho_bo.jpg");
-            foodValues.put(COLUMN_FOOD_DESCRIPTION, "Phở bò thơm ngon");
-            foodValues.put(COLUMN_FOOD_QUANTITY, "100"); // Lưu ý: TEXT trong lược đồ
-            foodValues.put(COLUMN_FOOD_SOLID_COUNT, "50");
-            long foodId1 = db.insertOrThrow(TABLE_FOOD, null, foodValues);
-            if (foodId1 == -1) return false;
-
-            foodValues.clear();
-            foodValues.put(COLUMN_CATEGORY_ID, categoryId2);
-            foodValues.put(COLUMN_FOOD_NAME, "Nước cam");
-            foodValues.put(COLUMN_FOOD_PRICE, 20000.0);
-            foodValues.put(COLUMN_FOOD_IMAGE, "nuoc_cam.jpg");
-            foodValues.put(COLUMN_FOOD_DESCRIPTION, "Nước cam tươi");
-            foodValues.put(COLUMN_FOOD_QUANTITY, "200");
-            foodValues.put(COLUMN_FOOD_SOLID_COUNT, "100");
-            long foodId2 = db.insertOrThrow(TABLE_FOOD, null, foodValues);
-            if (foodId2 == -1) return false;
-
-            // Chèn dữ liệu vào bảng bill
-            ContentValues billValues = new ContentValues();
-            billValues.put(COLUMN_USER_ID, userId1);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-20");
-            billValues.put(COLUMN_BILL_TOTAL, 150000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Chờ xác nhận");
-            long billId1 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId1 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId2);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-21");
-            billValues.put(COLUMN_BILL_TOTAL, 80000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Xác nhận");
-            long billId2 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId2 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId1);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-22");
-            billValues.put(COLUMN_BILL_TOTAL, 220000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Đang giao");
-            long billId3 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId3 == -1) return false;
-
-
-            // Sau billId3 bạn thêm vào
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId2);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-23");
-            billValues.put(COLUMN_BILL_TOTAL, 120000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Đã giao");
-            long billId4 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId4 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId1);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-24");
-            billValues.put(COLUMN_BILL_TOTAL, 90000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Hủy");
-            long billId5 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId5 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId2);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-25");
-            billValues.put(COLUMN_BILL_TOTAL, 450000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Chờ xác nhận");
-            long billId6 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId6 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId1);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-26");
-            billValues.put(COLUMN_BILL_TOTAL, 300000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Xác nhận");
-            long billId7 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId7 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId2);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-27");
-            billValues.put(COLUMN_BILL_TOTAL, 270000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Đang giao");
-            long billId8 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId8 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId1);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-28");
-            billValues.put(COLUMN_BILL_TOTAL, 110000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Đã giao");
-            long billId9 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId9 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId2);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-29");
-            billValues.put(COLUMN_BILL_TOTAL, 60000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Chờ xác nhận");
-            long billId10 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId10 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId1);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-30");
-            billValues.put(COLUMN_BILL_TOTAL, 190000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Xác nhận");
-            long billId11 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId11 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId2);
-            billValues.put(COLUMN_BILL_DATE, "2025-08-31");
-            billValues.put(COLUMN_BILL_TOTAL, 250000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Đang giao");
-            long billId12 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId12 == -1) return false;
-
-            billValues.clear();
-            billValues.put(COLUMN_USER_ID, userId1);
-            billValues.put(COLUMN_BILL_DATE, "2025-09-01");
-            billValues.put(COLUMN_BILL_TOTAL, 130000.0);
-            billValues.put(COLUMN_BILL_STATUS, "Đã giao");
-            long billId13 = db.insertOrThrow(TABLE_BILL, null, billValues);
-            if (billId13 == -1) return false;
-
-// Thêm chi tiết cho các bill vừa tạo
-            long[] newBills = {billId4, billId5, billId6, billId7, billId8, billId9, billId10, billId11, billId12, billId13};
-
-            for (long bId : newBills) {
-                ContentValues detail = new ContentValues();
-                detail.put(COLUMN_BILL_ID, bId);
-                detail.put(COLUMN_FOOD_ID, foodId1);
-                detail.put(COLUMN_BILL_DETAIL_QUANTITY, 1);
-                if (db.insertOrThrow(TABLE_BILL_DETAIL, null, detail) == -1) return false;
-
-                detail.clear();
-                detail.put(COLUMN_BILL_ID, bId);
-                detail.put(COLUMN_FOOD_ID, foodId2);
-                detail.put(COLUMN_BILL_DETAIL_QUANTITY, 2);
-                if (db.insertOrThrow(TABLE_BILL_DETAIL, null, detail) == -1) return false;
-            }
-
-
-            // Chèn dữ liệu vào bảng billdetail
-            ContentValues billDetailValues = new ContentValues();
-            billDetailValues.put(COLUMN_BILL_ID, billId1);
-            billDetailValues.put(COLUMN_FOOD_ID, foodId1);
-            billDetailValues.put(COLUMN_BILL_DETAIL_QUANTITY, 3);
-            long detailId1 = db.insertOrThrow(TABLE_BILL_DETAIL, null, billDetailValues);
-            if (detailId1 == -1) return false;
-
-            billDetailValues.clear();
-            billDetailValues.put(COLUMN_BILL_ID, billId2);
-            billDetailValues.put(COLUMN_FOOD_ID, foodId2);
-            billDetailValues.put(COLUMN_BILL_DETAIL_QUANTITY, 4);
-            long detailId2 = db.insertOrThrow(TABLE_BILL_DETAIL, null, billDetailValues);
-            if (detailId2 == -1) return false;
-
-            billDetailValues.clear();
-            billDetailValues.put(COLUMN_BILL_ID, billId3);
-            billDetailValues.put(COLUMN_FOOD_ID, foodId1);
-            billDetailValues.put(COLUMN_BILL_DETAIL_QUANTITY, 2);
-            long detailId3 = db.insertOrThrow(TABLE_BILL_DETAIL, null, billDetailValues);
-            if (detailId3 == -1) return false;
-
-            billDetailValues.clear();
-            billDetailValues.put(COLUMN_BILL_ID, billId3);
-            billDetailValues.put(COLUMN_FOOD_ID, foodId2);
-            billDetailValues.put(COLUMN_BILL_DETAIL_QUANTITY, 3);
-            long detailId4 = db.insertOrThrow(TABLE_BILL_DETAIL, null, billDetailValues);
-            if (detailId4 == -1) return false;
-
-            return true;
-        } catch (Exception e) {
-            // Ghi log lỗi để kiểm tra
-            android.util.Log.e("DatabaseHelper", "Error inserting sample data: " + e.getMessage());
-            return false;
-        } finally {
-            db.close();
-        }
+// Lấy sản phẩm theo trang
+    public Cursor getProductsByPage(int page, int pageSize) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int offset = (page - 1) * pageSize;
+        return db.rawQuery("SELECT * FROM " + TABLE_FOOD + " LIMIT ? OFFSET ?",
+                new String[]{String.valueOf(pageSize), String.valueOf(offset)});
     }
+
+    // Lấy tổng số sản phẩm
+    public int getTotalProducts() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_FOOD, null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        return count;
+    }
+    // Xóa sản phẩm
+    public int deleteFood(int foodId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_FOOD, COLUMN_FOOD_ID + "=?", new String[]{String.valueOf(foodId)});
+    }
+
+    // Thêm sản phẩm vào bảng food
+    public long insertFood(int categoryId, String foodName, double price, int image, String description, int quantity, int soldCount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_ID, categoryId);
+        values.put(COLUMN_FOOD_NAME, foodName);
+        values.put(COLUMN_FOOD_PRICE, price);
+        values.put(COLUMN_FOOD_IMAGE, image);
+        values.put(COLUMN_FOOD_DESCRIPTION, description);
+        values.put(COLUMN_FOOD_QUANTITY, quantity);
+        values.put(COLUMN_FOOD_SOLD_COUNT, soldCount);
+        return db.insert(TABLE_FOOD, null, values);
+    }
+
+    // Cập nhật sản phẩm
+    public int updateFood(int foodId, int categoryId, String foodName, double price, int image, String description, int quantity, int soldCount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_ID, categoryId);
+        values.put(COLUMN_FOOD_NAME, foodName);
+        values.put(COLUMN_FOOD_PRICE, price);
+        values.put(COLUMN_FOOD_IMAGE, image);
+        values.put(COLUMN_FOOD_DESCRIPTION, description);
+        values.put(COLUMN_FOOD_QUANTITY, quantity);
+        values.put(COLUMN_FOOD_SOLD_COUNT, soldCount);
+        return db.update(TABLE_FOOD, values, COLUMN_FOOD_ID + "=?", new String[]{String.valueOf(foodId)});
+    }
+
+    // Thống kê doanh thu theo tháng
+    public Cursor getRevenueByMonth(String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT strftime('%Y-%m', " + COLUMN_BILL_DATE + ") AS Period, " +
+                "SUM(" + COLUMN_BILL_TOTAL + ") AS TotalRevenue " +
+                "FROM " + TABLE_BILL + " " +
+                "WHERE " + COLUMN_BILL_DATE + " BETWEEN ? AND ? " +
+                "AND " + COLUMN_BILL_STATUS + " = 'Đã giao' " +
+                "GROUP BY strftime('%Y-%m', " + COLUMN_BILL_DATE + ") " +
+                "ORDER BY Period";
+        return db.rawQuery(query, new String[]{startDate, endDate});
+    }
+
+    // Thống kê doanh thu theo ngày
+    public Cursor getRevenueByDay(String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT strftime('%Y-%m-%d', " + COLUMN_BILL_DATE + ") AS Period, " +
+                "SUM(" + COLUMN_BILL_TOTAL + ") AS TotalRevenue " +
+                "FROM " + TABLE_BILL + " " +
+                "WHERE " + COLUMN_BILL_DATE + " BETWEEN ? AND ? " +
+                "AND " + COLUMN_BILL_STATUS + " = 'Đã giao' " +
+                "GROUP BY strftime('%Y-%m-%d', " + COLUMN_BILL_DATE + ") " +
+                "ORDER BY Period";
+        return db.rawQuery(query, new String[]{startDate, endDate});
+    }
+
+
+    // Thống kê doanh thu theo danh mục
+    public Cursor getRevenueByCategory(String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT c." + COLUMN_CATEGORY_NAME + ", SUM(b." + COLUMN_BILL_TOTAL + ") AS TotalRevenue " +
+                "FROM " + TABLE_BILL + " b " +
+                "JOIN " + TABLE_BILL_DETAIL + " bd ON b." + COLUMN_BILL_ID + " = bd." + COLUMN_BILL_ID + " " +
+                "JOIN " + TABLE_FOOD + " f ON bd." + COLUMN_FOOD_ID + " = f." + COLUMN_FOOD_ID + " " +
+                "JOIN " + TABLE_CATEGORY + " c ON f." + COLUMN_CATEGORY_ID + " = c." + COLUMN_CATEGORY_ID + " " +
+                "WHERE b." + COLUMN_BILL_DATE + " BETWEEN ? AND ? " +
+                "AND b." + COLUMN_BILL_STATUS + " = 'Đã giao' " +
+                "GROUP BY c." + COLUMN_CATEGORY_ID + " " +
+                "ORDER BY TotalRevenue DESC";
+        return db.rawQuery(query, new String[]{startDate, endDate});
+    }
+
+
+    public Cursor getBestSellingProducts(int limit, String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT f." + COLUMN_FOOD_ID + ", f." + COLUMN_FOOD_NAME + ", f." + COLUMN_FOOD_PRICE + ", f."
+                + COLUMN_FOOD_IMAGE + ", f." + COLUMN_CATEGORY_ID + ", "
+                + "SUM(bd." + COLUMN_BILL_DETAIL_QUANTITY + ") AS TotalQuantity "
+                + "FROM " + TABLE_BILL_DETAIL + " bd "
+                + "JOIN " + TABLE_BILL + " b ON bd." + COLUMN_BILL_ID + " = b." + COLUMN_BILL_ID + " "
+                + "JOIN " + TABLE_FOOD + " f ON bd." + COLUMN_FOOD_ID + " = f." + COLUMN_FOOD_ID + " "
+                + "WHERE b." + COLUMN_BILL_DATE + " BETWEEN ? AND ? "
+                + "AND b." + COLUMN_BILL_STATUS + " = 'Đã giao' "
+                + "GROUP BY bd." + COLUMN_FOOD_ID + " "
+                + "ORDER BY TotalQuantity DESC "
+                + "LIMIT ?";
+        return db.rawQuery(query, new String[]{startDate, endDate, String.valueOf(limit)});
+    }
+
+
+
+    public int getTotalQuantitySold(String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        int totalQuantity = 0;
+        try {
+            String query = "SELECT SUM(" + COLUMN_BILL_DETAIL_QUANTITY + ") FROM " + TABLE_BILL_DETAIL + " bd " +
+                    "JOIN " + TABLE_BILL + " b ON bd." + COLUMN_BILL_ID + " = b." + COLUMN_BILL_ID +
+                    " WHERE b." + COLUMN_BILL_DATE + " BETWEEN ? AND ? " +
+                    "AND b." + COLUMN_BILL_STATUS + " = 'Đã giao'";
+            cursor = db.rawQuery(query, new String[]{startDate, endDate});
+            if (cursor.moveToFirst()) {
+                totalQuantity = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return totalQuantity;
+    }
+
+
 }

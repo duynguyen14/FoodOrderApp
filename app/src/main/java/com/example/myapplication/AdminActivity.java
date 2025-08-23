@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.example.myapplication.ui.product_management.ProductManagement;
+import com.example.myapplication.ui.revenue.RevenueActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -68,6 +70,10 @@ public class AdminActivity extends AppCompatActivity {
                 startActivity(new Intent(this, UserManagementActivity.class));
             } else if (id == R.id.nav_order_management) {
                 startActivity(new Intent(this, OrderManagementActivity.class));
+            } else if (id == R.id.nav_product_management) {
+                startActivity(new Intent(this, ProductManagement.class));
+            } else if (id == R.id.nav_revenue) {
+                startActivity(new Intent(this, RevenueActivity.class));
             } else {
                 // Các item khác để NavigationUI xử lý (giữ nguyên icon 3 gạch)
                 NavigationUI.onNavDestinationSelected(item, navController);
