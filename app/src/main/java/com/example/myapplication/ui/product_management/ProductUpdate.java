@@ -381,7 +381,7 @@ public class ProductUpdate extends AppCompatActivity {
             @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_FOOD_DESCRIPTION));
             @SuppressLint("Range") int categoryId = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_CATEGORY_ID));
             @SuppressLint("Range") int quantity = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_FOOD_QUANTITY));
-            @SuppressLint("Range") int count = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_FOOD_SOLD_COUNT)); // Lấy giá trị soldCount hiện tại
+            @SuppressLint("Range") int count = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_FOOD_SOLID_COUNT)); // Lấy giá trị soldCount hiện tại
 
             etName.setText(name);
             etPrice.setText(String.format("%.2f", price));

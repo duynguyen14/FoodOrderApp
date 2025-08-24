@@ -1,10 +1,11 @@
 package com.example.myapplication.ui.revenue;
-import android.annotation.SuppressLint;
+
 import android.app.DatePickerDialog;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,7 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,8 +43,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class RevenueActivity extends AppCompatActivity {
-
+public class AdminHomeFragment extends Fragment {
     private DatabaseHelper dbHelper;
     private Spinner statsSpinner;
     private BarChart barChart;
@@ -63,28 +64,27 @@ public class RevenueActivity extends AppCompatActivity {
             "Doanh thu theo ngày (Đường)",
             "Doanh thu theo danh mục (Tròn)"
     };
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
 
-    @SuppressLint("MissingInflatedId")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activitiy_revenue);
-        dbHelper = new DatabaseHelper(this);
-        statsSpinner = findViewById(R.id.stats_spinner);
-        barChart = findViewById(R.id.bar_chart);
-        lineChart = findViewById(R.id.line_chart);
-        pieChart = findViewById(R.id.pie_chart);
-        productsRecyclerView = findViewById(R.id.products_recycler_view);
-        totalQuantityTextView = findViewById(R.id.total_quantity_text);
-        filterDateButton = findViewById(R.id.filter_date_button);
+
+        View root = inflater.inflate(R.layout.fragment_admin_home,container,false);
+        dbHelper = new DatabaseHelper(requireContext());
+
+        // Find views trên root
+        statsSpinner = root.findViewById(R.id.stats_spinner);
+        barChart = root.findViewById(R.id.bar_chart);
+        lineChart = root.findViewById(R.id.line_chart);
+        pieChart = root.findViewById(R.id.pie_chart);
+        productsRecyclerView = root.findViewById(R.id.products_recycler_view);
+        totalQuantityTextView = root.findViewById(R.id.total_quantity_text);
+        filterDateButton = root.findViewById(R.id.filter_date_button);
 
         // Thiết lập RecyclerView
-        productAdapter = new RevenueProductAdapter(this, null);
-        productsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        productAdapter = new RevenueProductAdapter(requireContext(), null);
+        productsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         productsRecyclerView.setAdapter(productAdapter);
-
-        // Thiết lập Spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, STATS_OPTIONS);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, STATS_OPTIONS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statsSpinner.setAdapter(adapter);
 
@@ -94,7 +94,6 @@ public class RevenueActivity extends AppCompatActivity {
         // Luôn hiển thị sản phẩm bán chạy và tổng số lượng
         updateBestSellingProducts();
         updateTotalQuantity();
-
         statsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -106,20 +105,25 @@ public class RevenueActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
-
-        // Hiển thị thống kê mặc định khi khởi động
         updateStatistics(0);
+
+        return root;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+    }
     private void showDateRangePicker() {
         Calendar calendar = Calendar.getInstance();
-        DatePickerDialog startDatePicker = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+        DatePickerDialog startDatePicker = new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
             Calendar startCal = Calendar.getInstance();
             startCal.set(year, month, dayOfMonth);
             startDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(startCal.getTime());
 
             // Mở DatePicker thứ hai để chọn endDate
-            DatePickerDialog endDatePicker = new DatePickerDialog(this, (view1, year1, month1, dayOfMonth1) -> {
+            DatePickerDialog endDatePicker = new DatePickerDialog(requireContext(), (view1, year1, month1, dayOfMonth1) -> {
                 Calendar endCal = Calendar.getInstance();
                 endCal.set(year1, month1, dayOfMonth1);
                 endDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(endCal.getTime());
@@ -176,7 +180,7 @@ public class RevenueActivity extends AppCompatActivity {
         cursor.close();
 
         if (entries.isEmpty()) {
-            Toast.makeText(this, "Không có dữ liệu doanh thu trong khoảng thời gian này", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Không có dữ liệu doanh thu trong khoảng thời gian này", Toast.LENGTH_SHORT).show();
             barChart.setData(null);
             barChart.invalidate();
             return;
@@ -219,7 +223,7 @@ public class RevenueActivity extends AppCompatActivity {
         cursor.close();
 
         if (entries.isEmpty()) {
-            Toast.makeText(this, "Không có dữ liệu doanh thu trong khoảng thời gian này", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Không có dữ liệu doanh thu trong khoảng thời gian này", Toast.LENGTH_SHORT).show();
             lineChart.setData(null);
             lineChart.invalidate();
             return;
@@ -264,7 +268,7 @@ public class RevenueActivity extends AppCompatActivity {
         cursor.close();
 
         if (entries.isEmpty()) {
-            Toast.makeText(this, "Không có dữ liệu doanh thu theo danh mục trong khoảng thời gian này", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Không có dữ liệu doanh thu theo danh mục trong khoảng thời gian này", Toast.LENGTH_SHORT).show();
             pieChart.setData(null);
             pieChart.invalidate();
             return;
@@ -288,7 +292,7 @@ public class RevenueActivity extends AppCompatActivity {
     private void updateBestSellingProducts() {
         Cursor cursor = dbHelper.getBestSellingProducts(3, startDate, endDate);
         if (cursor.getCount() == 0) {
-            Toast.makeText(this, "Không có dữ liệu sản phẩm bán chạy trong khoảng thời gian này", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Không có dữ liệu sản phẩm bán chạy trong khoảng thời gian này", Toast.LENGTH_SHORT).show();
         }
         productAdapter.swapCursor(cursor);
     }
@@ -298,9 +302,6 @@ public class RevenueActivity extends AppCompatActivity {
         totalQuantityTextView.setText("Tổng số lượng sản phẩm bán ra: " + totalQuantity);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        productAdapter.closeCursor();
-    }
+
+
 }

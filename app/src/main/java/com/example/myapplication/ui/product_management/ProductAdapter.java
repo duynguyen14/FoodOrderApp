@@ -70,7 +70,7 @@ public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
     int imageResId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FOOD_IMAGE));
     String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FOOD_DESCRIPTION));
     int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FOOD_QUANTITY));
-    int soldCount = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FOOD_SOLD_COUNT));
+    int soldCount = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FOOD_SOLID_COUNT));
     // Dòng này cần truy vấn để lấy CategoryName
     String categoryName = getCategoryName(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID)));
 

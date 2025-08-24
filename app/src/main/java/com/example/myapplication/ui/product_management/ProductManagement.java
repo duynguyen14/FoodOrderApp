@@ -218,22 +218,6 @@ public class ProductManagement extends AppCompatActivity implements ProductAdapt
 
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         int savedDbVersion = prefs.getInt("db_version", 0);
-//        int currentDbVersion = DatabaseHelper.DATABASE_VERSION;
-//
-//        if (savedDbVersion < currentDbVersion) {
-//            // Reset dữ liệu cũ
-//            SQLiteDatabase db = dbHelper.getWritableDatabase();
-//            db.delete(DatabaseHelper.TABLE_FOOD, null, null);
-//            db.delete(DatabaseHelper.TABLE_CATEGORY, null, null);
-//
-//            // Thêm dữ liệu mẫu mới
-//            dbHelper.insertSampleData();
-//
-//            // Cập nhật version trong SharedPreferences
-//            prefs.edit()
-//                    .putInt("db_version", currentDbVersion)
-//                    .apply();
-//        }
 
         // Thiết lập RecyclerView
         rvProducts.setLayoutManager(new LinearLayoutManager(this));

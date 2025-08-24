@@ -23,8 +23,8 @@
         android:label="@string/nav_item_favorite"
         tools:layout="@layout/fragment_favorite" />
     <fragment
-        android:id="@+id/myCartFragment"
-        android:name="com.example.myapplication.MyCartFragment"
+        android:id="@+id/nav_cart"
+        android:name="com.example.myapplication.ui.cart.CartFragment"
         android:label="@string/nav_item_cart"
         tools:layout="@layout/fragment_my_cart" />
 </navigation>

@@ -64,7 +64,6 @@ public class RevenueProductAdapter extends RecyclerView.Adapter<RevenueProductAd
         int imageResId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_FOOD_IMAGE));
         int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID));
         String categoryName = getCategoryName(categoryId);
-
         holder.tvName.setText(name);
         holder.tvPrice.setText(String.format("Giá: $%.2f", price));
         holder.tvCategoryName.setText("Danh mục: " + categoryName);

@@ -19,11 +19,29 @@
     <string name="userName">Tên đăng nhập</string>
     <string name="title_activity_admin">AdminActivity</string>
     <string name="nav_item_home">Trang chủ</string>
-    <string name="nav_item_daily_meal">Bữa ăn hàng ngày</string>
+    <string name="nav_item_daily_meal">Đơn hàng của tôi</string>
     <string name="nav_item_favorite">Món ăn yêu thích</string>
     <string name="nav_item_cart">Giỏ hàng</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="demoTitle">Khám phá món ăn mới</string>
     <string name="helloUser">Xin chào</string>
+    <string name="_10_00_23_00">10:00 - 23:00</string>
+    <string name="_5_0">5.0</string>
+    <string name="sl_10">SL: 10</string>
+    <string name="demo">...</string>
+    <string name="email">Email:</string>
+    <string name="gi_i_t_nh">Giới tính:</string>
+    <string name="nam">Nam</string>
+    <string name="n">Nữ</string>
+    <string name="ng_y_sinh">Ngày sinh:</string>
+    <string name="m_t_kh_u">Mật khẩu:</string>
+    <string name="c_p_nh_t">Cập nhật</string>
+    <string name="ng_xu_t">Đăng xuất</string>
+    <string name="th_ng_tin_c_nh_n">Thông tin cá nhân</string>
+    <string name="t_n">Tên:</string>
+    <string name="th_ng_k_doanh_thu">Thống kê doanh thu</string>
+    <string name="qu_n_l_t_i_kho_n">Quản lý tài khoản</string>
+    <string name="qu_n_l_s_n_ph_m">Quản lý sản phẩm</string>
+    <string name="qu_n_l_n_h_ng">Quản lý đơn hàng</string>
 </resources>

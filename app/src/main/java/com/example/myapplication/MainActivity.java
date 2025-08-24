@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
 
+import com.example.myapplication.database.DatabaseHelper;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -23,6 +24,7 @@ import com.example.myapplication.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private DatabaseHelper databaseHelper;
     private ActivityMainBinding binding;
     private SharedPreferences sharedPref;
     @Override
@@ -44,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
         TextView textSubtitle = headerView.findViewById(R.id.textSubtitle);
         textName.setText(name);
         textSubtitle.setText(email);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_daily_meal, R.id.nav_favorite,R.id.nav_cart)
                 .setOpenableLayout(drawer)

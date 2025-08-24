@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
-import com.example.myapplication.ui.product_management.ProductManagement;
 import com.example.myapplication.ui.revenue.RevenueActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -54,7 +53,7 @@ public class AdminActivity extends AppCompatActivity {
 
         // Các menu mặc định dùng Navigation Component
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_revenue, R.id.nav_account_management, R.id.nav_product_management, R.id.nav_order_management
         )
                 .setOpenableLayout(drawer)
                 .build();
@@ -62,25 +61,6 @@ public class AdminActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_admin);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        // 👉 Bắt sự kiện cho 2 menu Activity riêng
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_account_management) {
-                startActivity(new Intent(this, UserManagementActivity.class));
-            } else if (id == R.id.nav_order_management) {
-                startActivity(new Intent(this, OrderManagementActivity.class));
-            } else if (id == R.id.nav_product_management) {
-                startActivity(new Intent(this, ProductManagement.class));
-            } else if (id == R.id.nav_revenue) {
-                startActivity(new Intent(this, RevenueActivity.class));
-            } else {
-                // Các item khác để NavigationUI xử lý (giữ nguyên icon 3 gạch)
-                NavigationUI.onNavDestinationSelected(item, navController);
-            }
-            drawer.closeDrawers(); // Đóng menu sau khi chọn
-            return true;
-        });
     }
 
     @Override
