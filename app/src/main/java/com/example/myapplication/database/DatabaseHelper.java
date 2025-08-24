@@ -102,7 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_EMAIL + "," +
                 COLUMN_USER_PASSWORD + "," +
                 COLUMN_USER_GENDER + "," +
-                COLUMN_USER_DOB + "," +
+                COLUMN_USER_DOB + "," + 
                 COLUMN_USER_ROLE +
                 ") VALUES ('admin','admin@gmail.com','123456','Male','1990-01-01','ADMIN')");
 
