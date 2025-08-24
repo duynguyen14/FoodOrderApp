@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     int imageResId3 = R.drawable.burger4;
     int imageResId4 = R.drawable.coffe;
     private static final String DATABASE_NAME = "app_db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 17;
 
     // Bảng Users
     public static final String TABLE_USER = "users";
@@ -708,24 +708,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<HomeVerModel> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String query =
-                "SELECT f." + COLUMN_FOOD_ID + ", " +
-                        "       f." + COLUMN_FOOD_NAME + ", " +
-                        "       f." + COLUMN_FOOD_IMAGE + ", " +
-                        "       f." + COLUMN_FOOD_TIME + ", " +
-                        "       f." + COLUMN_FOOD_PRICE + ", " +
-                        "       IFNULL(AVG(r." + COLUMN_REVIEW_RATING + "), 0) AS avg_rating " +
-                        "FROM " + TABLE_FOOD + " f " +
-                        "LEFT JOIN " + TABLE_REVIEW + " r " +
-                        "       ON f." + COLUMN_FOOD_ID + " = r." + COLUMN_FOOD_ID + " " +
-                        "WHERE f." + COLUMN_CATEGORY_ID + " = ? " +
-                        "GROUP BY f." + COLUMN_FOOD_ID + ", " +
-                        "         f." + COLUMN_FOOD_NAME + ", " +
-                        "         f." + COLUMN_FOOD_IMAGE + ", " +
-                        "         f." + COLUMN_FOOD_TIME + ", " +
-                        "         f." + COLUMN_FOOD_PRICE + " " +
-                        "ORDER BY f." + COLUMN_FOOD_ID + " ASC";
-
+        String query = "SELECT f." + COLUMN_FOOD_ID + ", " +
+                "       f." + COLUMN_FOOD_NAME + ", " +
+                "       f." + COLUMN_FOOD_IMAGE + ", " +
+                "       f." + COLUMN_FOOD_TIME + ", " +
+                "       f." + COLUMN_FOOD_PRICE + ", " +
+                "       f." + COLUMN_FOOD_QUANTITY + ", " +
+                "       IFNULL(AVG(r." + COLUMN_REVIEW_RATING + "), 0) AS avg_rating " +
+                "FROM " + TABLE_FOOD + " f " +
+                "LEFT JOIN " + TABLE_REVIEW + " r " +
+                "       ON f." + COLUMN_FOOD_ID + " = r." + COLUMN_FOOD_ID + " " +
+                "WHERE f." + COLUMN_CATEGORY_ID + " = ? " +
+                "GROUP BY f." + COLUMN_FOOD_ID + ", " +
+                "         f." + COLUMN_FOOD_NAME + ", " +
+                "         f." + COLUMN_FOOD_IMAGE + ", " +
+                "         f." + COLUMN_FOOD_TIME + ", " +
+                "         f." + COLUMN_FOOD_PRICE + ", " +
+                "         f." + COLUMN_FOOD_QUANTITY + " " +
+                "ORDER BY f." + COLUMN_FOOD_ID + " ASC";
 
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(categoryId)});
 
@@ -736,41 +736,121 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int image = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FOOD_IMAGE));
                 String time = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FOOD_TIME));
                 double priceValue = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_FOOD_PRICE));
+                String quantity = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FOOD_QUANTITY));
+
                 double avgRating = cursor.getDouble(cursor.getColumnIndexOrThrow("avg_rating"));
 
                 @SuppressLint("DefaultLocale")
                 String rating = String.format("%.1f", avgRating);
                 String price = "Min- " + priceValue + "$";
 
-                list.add(new HomeVerModel(id,image, name, time, rating, price));
+                list.add(new HomeVerModel(id, image, name, time, rating, price, quantity)); // Cần sửa lại HomeVerModel để nhận thêm tham số quantity
             } while (cursor.moveToNext());
             cursor.close();
         }
-
         return list;
     }
-    public boolean updateOrderStatus(int orderId, String status) {
-        Log.d("OrderManagement", "BẮT ĐẦU updateOrderStatus với orderId=" + orderId + ", status=" + status);
+//    public boolean updateOrderStatus(int orderId, String status) {
+//        Log.d("OrderManagement", "BẮT ĐẦU updateOrderStatus với orderId=" + orderId + ", status=" + status);
+//
+//
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Log.d("OrderManagement", "Đã lấy được database");
+//
+//        ContentValues values = new ContentValues();
+//        values.put(COLUMN_BILL_STATUS, status);
+//        Log.d("OrderManagement", "Đã set ContentValues");
+//
+//        int rows = 0;
+//        try {
+//            rows = db.update(TABLE_BILL, values, COLUMN_BILL_ID + "=?", new String[]{String.valueOf(orderId)});
+//            Log.d("OrderManagement", "Cập nhật đơn #" + orderId + " sang " + status + ", rows: " + rows);
+//        } catch (Exception e) {
+//            Log.e("OrderManagement", "Lỗi cập nhật đơn #" + orderId + ": " + e.getMessage());
+//        } finally {
+//            db.close();
+//        }
+//        return rows > 0;
+//    }
+public boolean updateOrderStatus(int orderId, String status) {
+    Log.d("OrderManagement", "BẮT ĐẦU updateOrderStatus với orderId=" + orderId + ", status=" + status);
 
+    SQLiteDatabase db = this.getWritableDatabase();
+    Log.d("OrderManagement", "Đã lấy được database");
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        Log.d("OrderManagement", "Đã lấy được database");
-
+    int rowsAffected = 0;
+    db.beginTransaction(); // Bắt đầu một giao dịch
+    try {
         ContentValues values = new ContentValues();
         values.put(COLUMN_BILL_STATUS, status);
-        Log.d("OrderManagement", "Đã set ContentValues");
 
-        int rows = 0;
-        try {
-            rows = db.update(TABLE_BILL, values, COLUMN_BILL_ID + "=?", new String[]{String.valueOf(orderId)});
-            Log.d("OrderManagement", "Cập nhật đơn #" + orderId + " sang " + status + ", rows: " + rows);
-        } catch (Exception e) {
-            Log.e("OrderManagement", "Lỗi cập nhật đơn #" + orderId + ": " + e.getMessage());
-        } finally {
-            db.close();
+        // Cập nhật trạng thái đơn hàng
+        rowsAffected = db.update(TABLE_BILL, values, COLUMN_BILL_ID + "=?", new String[]{String.valueOf(orderId)});
+        Log.d("OrderManagement", "Cập nhật đơn #" + orderId + " sang " + status + ", rows: " + rowsAffected);
+
+        // Nếu trạng thái là "Đã giao", tiến hành trừ số lượng sản phẩm
+        if (rowsAffected > 0 && status.equals("Đã giao")) {
+            // Lấy danh sách sản phẩm trong đơn hàng
+            Cursor orderItemsCursor = getOrderItems(db, orderId);
+
+            if (orderItemsCursor != null && orderItemsCursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range")
+                    int productId = orderItemsCursor.getInt(orderItemsCursor.getColumnIndex(COLUMN_FOOD_ID));
+                    @SuppressLint("Range")
+                    int quantity = orderItemsCursor.getInt(orderItemsCursor.getColumnIndex(COLUMN_BILL_DETAIL_QUANTITY));
+
+                    // Trừ số lượng sản phẩm trong kho
+                    updateProductQuantity(db, productId, quantity);
+                } while (orderItemsCursor.moveToNext());
+            }
+            if (orderItemsCursor != null) {
+                orderItemsCursor.close();
+            }
         }
-        return rows > 0;
+
+        db.setTransactionSuccessful(); // Đánh dấu giao dịch thành công
+    } catch (Exception e) {
+        Log.e("OrderManagement", "Lỗi cập nhật đơn #" + orderId + ": " + e.getMessage());
+        return false;
+    } finally {
+        db.endTransaction(); // Kết thúc giao dịch
+        db.close();
     }
+    return rowsAffected > 0;
+}
+
+    // Phương thức mới để lấy chi tiết các sản phẩm trong một đơn hàng
+    private Cursor getOrderItems(SQLiteDatabase db, int orderId) {
+        String[] projection = {
+                COLUMN_FOOD_ID,
+                COLUMN_BILL_DETAIL_QUANTITY
+        };
+
+        String selection = COLUMN_BILL_ID + " = ?";
+        String[] selectionArgs = { String.valueOf(orderId) };
+
+        return db.query(
+                TABLE_BILL_DETAIL,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+    }
+
+    // Phương thức mới để cập nhật số lượng sản phẩm
+    private void updateProductQuantity(SQLiteDatabase db, int productId, int quantityToSubtract) {
+        String query = "UPDATE " + TABLE_FOOD +
+                " SET " + COLUMN_FOOD_QUANTITY + " = " + COLUMN_FOOD_QUANTITY + " - ? " +
+                " WHERE " + COLUMN_FOOD_ID + " = ?";
+
+        db.execSQL(query, new String[]{String.valueOf(quantityToSubtract), String.valueOf(productId)});
+        Log.d("OrderManagement", "Đã trừ " + quantityToSubtract + " sản phẩm #" + productId);
+    }
+
 
     // Hủy đơn (set trạng thái = "Hủy")
     public boolean cancelOrder(int orderId) {

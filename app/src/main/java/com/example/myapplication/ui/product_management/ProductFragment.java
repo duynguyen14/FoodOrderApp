@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +103,8 @@ public class ProductFragment extends Fragment implements ProductAdapter.OnProduc
     private void loadProducts(int page) {
         progressBar.setVisibility(View.VISIBLE);
         Cursor cursor = dbHelper.getProductsByPage(page, PAGE_SIZE);
+        int number = cursor.getCount();
+        Log.d("ProductManagement", "Số lượng sản phẩm lấy được: " + number);
         adapter.swapCursor(cursor);
         int totalProducts = dbHelper.getTotalProducts();
         int totalPages = (int) Math.ceil((double) totalProducts / PAGE_SIZE);

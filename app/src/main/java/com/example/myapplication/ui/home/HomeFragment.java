@@ -81,6 +81,7 @@ public class HomeFragment extends Fragment implements UpdateVerticalRec {
         // Load mặc định food theo category đầu tiên (nếu có)
         if (!homeHorModelList.isEmpty()) {
             int firstCategoryId = homeHorModelList.get(0).getId();
+
             homeVerModelList = databaseHelper.getAllFoodWithCategory(firstCategoryId);
         } else {
             homeVerModelList = new ArrayList<>();
@@ -101,6 +102,4 @@ public class HomeFragment extends Fragment implements UpdateVerticalRec {
         homeVerAdapter = new HomeVerAdapter(getActivity(), list);
         homeVerticalRec.setAdapter(homeVerAdapter);
     }
-
-
 }

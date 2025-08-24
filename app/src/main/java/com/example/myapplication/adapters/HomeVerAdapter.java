@@ -41,6 +41,7 @@ public class HomeVerAdapter extends RecyclerView.Adapter<HomeVerAdapter.ViewHold
         holder.price.setText(list.get(position).getPrice());
         holder.timing.setText(list.get(position).getTime());
         holder.rating.setText(list.get(position).getRating());
+        holder.quantity.setText(list.get(position).getQuantity());
         holder.addToCard.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
             // Truyền dữ liệu sản phẩm (nếu cần)
@@ -50,6 +51,7 @@ public class HomeVerAdapter extends RecyclerView.Adapter<HomeVerAdapter.ViewHold
             intent.putExtra("productImage", list.get(position).getImage());
             intent.putExtra("productTime", list.get(position).getTime());
             intent.putExtra("productRating", list.get(position).getRating());
+            intent.putExtra("productQuantity", list.get(position).getQuantity());
             context.startActivity(intent);
         });
     }
@@ -60,7 +62,7 @@ public class HomeVerAdapter extends RecyclerView.Adapter<HomeVerAdapter.ViewHold
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView name,timing,rating,price;
+        TextView name,timing,rating,price, quantity;
         Button addToCard;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,6 +71,7 @@ public class HomeVerAdapter extends RecyclerView.Adapter<HomeVerAdapter.ViewHold
             timing = itemView.findViewById(R.id.timing);
             rating = itemView.findViewById(R.id.rating);
             price = itemView.findViewById(R.id.price);
+            quantity = itemView.findViewById(R.id.quantity);
             addToCard = itemView.findViewById(R.id.add_to_cart_btn);
         }
     }

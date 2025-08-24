@@ -7,21 +7,30 @@ public class HomeVerModel {
     String time;
     String rating;
     String price;
+    String quantity;
 
     public HomeVerModel() {
     }
 
-    public HomeVerModel(int id,int image, String name, String time, String rating, String price) {
+    public HomeVerModel(int id,int image, String name, String time, String rating, String price, String quantity) {
         this.id = id;
         this.image = image;
         this.name = name;
         this.time = time;
         this.rating = rating;
         this.price = price;
+        this.quantity = quantity;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
+    }
+    public String getQuantity() {
+        return quantity;
     }
 
     public void setId(int id) {
