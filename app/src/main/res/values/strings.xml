@@ -19,7 +19,7 @@
     <string name="userName">Tên đăng nhập</string>
     <string name="title_activity_admin">AdminActivity</string>
     <string name="nav_item_home">Trang chủ</string>
-    <string name="nav_item_daily_meal">Bữa ăn hàng ngày</string>
+    <string name="nav_item_daily_meal">Đơn hàng của tôi</string>
     <string name="nav_item_favorite">Món ăn yêu thích</string>
     <string name="nav_item_cart">Giỏ hàng</string>
     <!-- TODO: Remove or change this placeholder text -->

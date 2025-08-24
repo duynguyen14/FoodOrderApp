@@ -1,6 +1,7 @@
 package com.example.myapplication.models;
 
 public class HomeVerModel {
+    int id;
     int image;
     String name;
     String time;
@@ -10,12 +11,21 @@ public class HomeVerModel {
     public HomeVerModel() {
     }
 
-    public HomeVerModel(int image, String name, String time, String rating, String price) {
+    public HomeVerModel(int id,int image, String name, String time, String rating, String price) {
+        this.id = id;
         this.image = image;
         this.name = name;
         this.time = time;
         this.rating = rating;
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getImage() {

@@ -9,8 +9,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.myapplication.R;
+import com.example.myapplication.models.CartItem;
 import com.example.myapplication.models.HomeHorModel;
 import com.example.myapplication.models.HomeVerModel;
+import com.example.myapplication.models.OrderModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -706,22 +708,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<HomeVerModel> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String query = "SELECT f." + COLUMN_FOOD_NAME + ", "
-                + "f." + COLUMN_FOOD_IMAGE + ", "
-                + "f." + COLUMN_FOOD_TIME + ", "
-                + "f." + COLUMN_FOOD_PRICE + ", "
-                + "IFNULL(AVG(r." + COLUMN_REVIEW_RATING + "), 0) AS avg_rating " +
-                "FROM " + TABLE_FOOD + " f " +
-                "LEFT JOIN " + TABLE_REVIEW + " r " +
-                "ON f." + COLUMN_FOOD_ID + " = r." + COLUMN_FOOD_ID + " " +
-                "WHERE f." + COLUMN_CATEGORY_ID + " = ? " +   // lọc theo categoryId
-                "GROUP BY f." + COLUMN_FOOD_ID + ", f." + COLUMN_FOOD_NAME + ", f." + COLUMN_FOOD_IMAGE + ", f." + COLUMN_FOOD_TIME + ", f." + COLUMN_FOOD_PRICE + " " +
-                "ORDER BY f." + COLUMN_FOOD_ID + " ASC";
+        String query =
+                "SELECT f." + COLUMN_FOOD_ID + ", " +
+                        "       f." + COLUMN_FOOD_NAME + ", " +
+                        "       f." + COLUMN_FOOD_IMAGE + ", " +
+                        "       f." + COLUMN_FOOD_TIME + ", " +
+                        "       f." + COLUMN_FOOD_PRICE + ", " +
+                        "       IFNULL(AVG(r." + COLUMN_REVIEW_RATING + "), 0) AS avg_rating " +
+                        "FROM " + TABLE_FOOD + " f " +
+                        "LEFT JOIN " + TABLE_REVIEW + " r " +
+                        "       ON f." + COLUMN_FOOD_ID + " = r." + COLUMN_FOOD_ID + " " +
+                        "WHERE f." + COLUMN_CATEGORY_ID + " = ? " +
+                        "GROUP BY f." + COLUMN_FOOD_ID + ", " +
+                        "         f." + COLUMN_FOOD_NAME + ", " +
+                        "         f." + COLUMN_FOOD_IMAGE + ", " +
+                        "         f." + COLUMN_FOOD_TIME + ", " +
+                        "         f." + COLUMN_FOOD_PRICE + " " +
+                        "ORDER BY f." + COLUMN_FOOD_ID + " ASC";
+
 
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(categoryId)});
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FOOD_ID));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FOOD_NAME));
                 int image = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FOOD_IMAGE));
                 String time = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FOOD_TIME));
@@ -732,7 +742,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String rating = String.format("%.1f", avgRating);
                 String price = "Min- " + priceValue + "$";
 
-                list.add(new HomeVerModel(image, name, time, rating, price));
+                list.add(new HomeVerModel(id,image, name, time, rating, price));
             } while (cursor.moveToNext());
             cursor.close();
         }
@@ -900,4 +910,197 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return totalQuantity;
     }
+    // Thêm sản phẩm vào giỏ hàng
+    // Thêm sản phẩm vào giỏ hàng
+    // Thêm sản phẩm vào giỏ hàng
+    public void addCart(int userId, int productId, int quantity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // 1. Lấy CartID theo user
+        int cartId = -1;
+        Cursor cartCursor = db.rawQuery(
+                "SELECT " + COLUMN_CART_ID + " FROM " + TABLE_CART + " WHERE " + COLUMN_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)}
+        );
+
+        if (cartCursor.moveToFirst()) {
+            cartId = cartCursor.getInt(0);
+        } else {
+            // Nếu chưa có thì tạo giỏ mới
+            ContentValues cartValues = new ContentValues();
+            cartValues.put(COLUMN_USER_ID, userId);
+            cartId = (int) db.insert(TABLE_CART, null, cartValues);
+        }
+        cartCursor.close();
+
+        // 2. Kiểm tra sản phẩm trong shoppingcartdetail
+        Cursor detailCursor = db.rawQuery(
+                "SELECT " + COLUMN_CART_DETAIL_QUANTITY + " FROM " + TABLE_CART_DETAIL +
+                        " WHERE " + COLUMN_CART_ID + " = ? AND " + COLUMN_FOOD_ID + " = ?",
+                new String[]{String.valueOf(cartId), String.valueOf(productId)}
+        );
+
+        if (detailCursor.moveToFirst()) {
+            // Có rồi -> update số lượng
+            int oldQuantity = detailCursor.getInt(0);
+            ContentValues updateValues = new ContentValues();
+            updateValues.put(COLUMN_CART_DETAIL_QUANTITY, oldQuantity + quantity);
+
+            db.update(TABLE_CART_DETAIL, updateValues,
+                    COLUMN_CART_ID + "=? AND " + COLUMN_FOOD_ID + "=?",
+                    new String[]{String.valueOf(cartId), String.valueOf(productId)});
+        } else {
+            // Chưa có -> insert mới
+            ContentValues detailValues = new ContentValues();
+            detailValues.put(COLUMN_CART_ID, cartId);
+            detailValues.put(COLUMN_FOOD_ID, productId);
+            detailValues.put(COLUMN_CART_DETAIL_QUANTITY, quantity);
+
+            db.insert(TABLE_CART_DETAIL, null, detailValues);
+        }
+        detailCursor.close();
+        // ===== LOG CART =====
+        Cursor logCursor = db.rawQuery(
+                "SELECT c." + COLUMN_CART_ID + ", cd." + COLUMN_FOOD_ID + ", cd." + COLUMN_CART_DETAIL_QUANTITY +
+                        " FROM " + TABLE_CART + " c " +
+                        "LEFT JOIN " + TABLE_CART_DETAIL + " cd ON c." + COLUMN_CART_ID + " = cd." + COLUMN_CART_ID +
+                        " WHERE c." + COLUMN_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)}
+        );
+
+        if (logCursor != null && logCursor.moveToFirst()) {
+            do {
+                int logCartId = logCursor.getInt(0);
+                int logFoodId = logCursor.getInt(1);
+                int logQuantity = logCursor.getInt(2);
+                android.util.Log.d("DB_LOG", "CartID=" + logCartId + " | FoodID=" + logFoodId + " | Quantity=" + logQuantity);
+            } while (logCursor.moveToNext());
+            logCursor.close();
+        }
+        db.close();
+    }
+
+    public Cursor getCartItemsByUserId(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT cd." + COLUMN_CART_DETAIL_ID + ", f." + COLUMN_FOOD_ID +
+                ", f." + COLUMN_FOOD_NAME + ", f." + COLUMN_FOOD_PRICE +
+                ", f." + COLUMN_FOOD_IMAGE + ", cd." + COLUMN_CART_DETAIL_QUANTITY +
+                " FROM " + TABLE_CART + " c " +
+                " JOIN " + TABLE_CART_DETAIL + " cd ON c." + COLUMN_CART_ID + " = cd." + COLUMN_CART_ID +
+                " JOIN " + TABLE_FOOD + " f ON cd." + COLUMN_FOOD_ID + " = f." + COLUMN_FOOD_ID +
+                " WHERE c." + COLUMN_USER_ID + " = ?";
+
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
+    }
+
+
+
+
+    // Thêm sản phẩm vào yêu thích
+    public void addFavorite(int userId, int productId) {
+
+    }
+    // Lấy danh sách bill theo userId
+    public List<OrderModel> getBillsByUserId(int userId) {
+        List<OrderModel> billList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT " + COLUMN_BILL_ID + ", "
+                + COLUMN_BILL_DATE + ", "
+                + COLUMN_BILL_TOTAL + ", "
+                + COLUMN_BILL_STATUS +
+                " FROM " + TABLE_BILL +
+                " WHERE " + COLUMN_USER_ID + " = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int billId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_BILL_ID));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_BILL_DATE));
+                double total = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_BILL_TOTAL));
+                String status = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_BILL_STATUS));
+
+                // Dùng OrderModel để chứa dữ liệu bill
+                OrderModel bill = new OrderModel(
+                        billId,
+                        "BILL-" + billId,   // Mã bill, bạn có thể hiển thị "BILL-xxx"
+                        status,
+                        date,
+                        total
+                );
+                billList.add(bill);
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        db.close();
+        return billList;
+    }
+
+    // Thêm 1 bill và các billDetail
+    public long insertBill(int userId, String billDate, double total, String status, List<CartItem> cartItems) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long billId = -1;
+        db.beginTransaction();
+        try {
+            // 1. Insert BILL
+            ContentValues billValues = new ContentValues();
+            billValues.put(COLUMN_USER_ID, userId);
+            billValues.put(COLUMN_BILL_DATE, billDate);
+            billValues.put(COLUMN_BILL_TOTAL, total);
+            billValues.put(COLUMN_BILL_STATUS, status);
+
+            billId = db.insert(TABLE_BILL, null, billValues);
+            Log.d("DB", "Inserted BILL id=" + billId);
+            if (billId == -1) throw new Exception("Insert bill thất bại");
+
+            // 2. Insert BILL DETAIL
+            for (CartItem item : cartItems) {
+                ContentValues detailValues = new ContentValues();
+                detailValues.put(COLUMN_BILL_ID, billId);
+                detailValues.put(COLUMN_FOOD_ID, item.getFoodId());
+                detailValues.put(COLUMN_BILL_DETAIL_QUANTITY, item.getQuantity());
+
+                long detailId = db.insert(TABLE_BILL_DETAIL, null, detailValues);
+                Log.d("DB", "Inserted BILL_DETAIL id=" + detailId + " for foodId=" + item.getFoodId());
+                if (detailId == -1) throw new Exception("Insert bill detail thất bại");
+            }
+
+            // 3. Lấy tất cả cart của user
+            Cursor cursor = db.query(TABLE_CART, new String[]{COLUMN_CART_ID},
+                    COLUMN_USER_ID + "=?", new String[]{String.valueOf(userId)},
+                    null, null, null);
+
+            if (cursor != null) {
+                Log.d("DB", "Cursor count=" + cursor.getCount());
+                while (cursor.moveToNext()) {
+                    int cartId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CART_ID));
+                    Log.d("DB", "Deleting CART_DETAIL for cartId=" + cartId);
+                    // Xóa chi tiết giỏ hàng trước
+                    int deletedDetails = db.delete(TABLE_CART_DETAIL, COLUMN_CART_ID + "=?", new String[]{String.valueOf(cartId)});
+                    Log.d("DB", "Deleted " + deletedDetails + " cart details");
+
+                    // Xóa cart chính
+                    int deletedCart = db.delete(TABLE_CART, COLUMN_CART_ID + "=?", new String[]{String.valueOf(cartId)});
+                    Log.d("DB", "Deleted cart id=" + cartId + " result=" + deletedCart);
+                }
+                cursor.close();
+            }
+
+            db.setTransactionSuccessful(); // commit
+        } catch (Exception e) {
+            e.printStackTrace();
+            billId = -1;
+        } finally {
+            db.endTransaction();
+        }
+
+        return billId;
+    }
+
+
+
 }
