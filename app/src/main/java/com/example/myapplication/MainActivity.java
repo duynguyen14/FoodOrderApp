@@ -46,14 +46,6 @@ public class MainActivity extends AppCompatActivity {
         TextView textSubtitle = headerView.findViewById(R.id.textSubtitle);
         textName.setText(name);
         textSubtitle.setText(email);
-//        databaseHelper = new DatabaseHelper(this);
-//        databaseHelper.insertCategory("Pizza", R.drawable.pizza);
-//        databaseHelper.insertCategory("HamBurger", R.drawable.hamburger);
-//        databaseHelper.insertCategory("Fries", R.drawable.fried_potatoes);
-//        databaseHelper.insertCategory("Cream", R.drawable.ice_cream);
-//        databaseHelper.insertCategory("Sandwich", R.drawable.sandwich);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_daily_meal, R.id.nav_favorite,R.id.nav_cart)
                 .setOpenableLayout(drawer)

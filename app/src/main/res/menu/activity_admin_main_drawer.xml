@@ -6,15 +6,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_revenue"
-            android:title="Thống kê doanh thu" />
+            android:title="@string/th_ng_k_doanh_thu" />
         <item
             android:id="@+id/nav_account_management"
-            android:title="Quản lý tài khoản" />
+            android:title="@string/qu_n_l_t_i_kho_n" />
         <item
             android:id="@+id/nav_product_management"
-            android:title="Quản lý sản phẩm" />
+            android:title="@string/qu_n_l_s_n_ph_m" />
         <item
             android:id="@+id/nav_order_management"
-            android:title="Quản lý đơn hàng" />
+            android:title="@string/qu_n_l_n_h_ng" />
     </group>
 </menu>

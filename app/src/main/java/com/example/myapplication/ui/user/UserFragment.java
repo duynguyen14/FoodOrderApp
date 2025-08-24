@@ -1,45 +1,46 @@
-package com.example.myapplication;
+package com.example.myapplication.ui.user;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
+import com.example.myapplication.R;
+import com.example.myapplication.UserInfoActivity;
+import com.example.myapplication.UserManagementActivity;
 import com.example.myapplication.database.DatabaseHelper;
-import com.google.android.material.appbar.MaterialToolbar;
 
-public class UserManagementActivity extends AppCompatActivity {
-
+public class UserFragment extends Fragment {
     private DatabaseHelper dbHelper;
     private LinearLayout userListContainer;
+    @SuppressLint("MissingInflatedId")
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_management);
-
-        // Ẩn status bar
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_FULLSCREEN
-        );
-
-        dbHelper = new DatabaseHelper(this);
-        userListContainer = findViewById(R.id.user_list_container);
-
+        View root = inflater.inflate(R.layout.fragment_user,container,false);
+        dbHelper = new DatabaseHelper(requireContext());
+        userListContainer = root.findViewById(R.id.user_list_container);
         loadUsers();
-        // Gắn sự kiện cho nút quay lại
-//        ImageView btnBack = findViewById(R.id.btnBack);
-//        btnBack.setOnClickListener(v -> finish());
 
+
+        return root;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+    }
     private void loadUsers() {
         userListContainer.removeAllViews();
 
@@ -64,7 +65,7 @@ public class UserManagementActivity extends AppCompatActivity {
                 tvUserName.setText("Username: " + username);
 
                 btnView.setOnClickListener(v -> {
-                    Intent intent = new Intent(UserManagementActivity.this, UserInfoActivity.class);
+                    Intent intent = new Intent(requireContext(), UserInfoActivity.class);
                     intent.putExtra("user_id", id);
                     startActivity(intent);
                 });
@@ -72,17 +73,17 @@ public class UserManagementActivity extends AppCompatActivity {
                 btnDelete.setOnClickListener(v -> {
                     if ("admin".equalsIgnoreCase(username)) {
                         // Chặn xóa tài khoản admin
-                        Toast.makeText(UserManagementActivity.this, "Không thể xóa tài khoản admin!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Không thể xóa tài khoản admin!", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    new androidx.appcompat.app.AlertDialog.Builder(UserManagementActivity.this)
+                    new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                             .setTitle("Xác nhận xóa")
                             .setMessage("Bạn có chắc chắn muốn xóa user \"" + username + "\" không?")
                             .setPositiveButton("Xóa", (dialog, which) -> {
                                 int rows = dbHelper.deleteUser(id);
                                 if (rows > 0) {
-                                    Toast.makeText(this, "Đã xóa user " + username, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), "Đã xóa user " + username, Toast.LENGTH_SHORT).show();
                                     loadUsers(); // reload lại danh sách
                                 }
                             })
@@ -96,7 +97,7 @@ public class UserManagementActivity extends AppCompatActivity {
 
             } while (cursor.moveToNext());
         } else {
-            Toast.makeText(this, "Không có người dùng nào", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Không có người dùng nào", Toast.LENGTH_SHORT).show();
         }
         cursor.close();
     }

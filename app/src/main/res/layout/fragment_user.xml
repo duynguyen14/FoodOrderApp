@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.user.UserFragment">
+    >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFAF0"
+        android:fitsSystemWindows="true">
+
+        <!-- Thanh tiêu đề với nút quay lại -->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:background="#2196F3"-->
+<!--            android:padding="12dp">-->
+
+<!--&lt;!&ndash;            <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/btnBack"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="24dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="24dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:src="@drawable/back"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:contentDescription="Quay lại"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:tint="@android:color/white" />&ndash;&gt;-->
+<!--            -->
+<!--        </LinearLayout>-->
+
+        <!-- Nội dung danh sách -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/user_list_container"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"/>
+        </ScrollView>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

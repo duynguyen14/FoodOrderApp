@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.ui.order;
 
 import android.app.AlertDialog;
 import android.database.Cursor;
@@ -7,17 +7,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
+import com.example.myapplication.OrderManagementActivity;
+import com.example.myapplication.R;
 import com.example.myapplication.database.DatabaseHelper;
 
 import java.text.NumberFormat;
@@ -26,33 +29,28 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class OrderManagementActivity extends AppCompatActivity {
+public class OrderFragment extends Fragment {
 
     private LinearLayout containerOrders;
     private DatabaseHelper dbHelper;
-
-    // Danh sách trạng thái chuẩn
     private final String[] statusList = {"Chờ xác nhận", "Xác nhận", "Đang giao", "Đã giao", "Hủy"};
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_management);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
 
-        containerOrders = findViewById(R.id.containerOrders);
-        dbHelper = new DatabaseHelper(this);
+        View root = inflater.inflate(R.layout.order_fragment,container,false);
+        containerOrders = root.findViewById(R.id.containerOrders);
+        dbHelper = new DatabaseHelper(requireContext());
 
-        // Nút Back
-        ImageView btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> finish());
-
-        // Ẩn status bar
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-
-//        dbHelper.insertSampleData();
         showOrders();
+        return root;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+    }
     private void showOrders() {
         containerOrders.removeAllViews();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -91,7 +89,7 @@ public class OrderManagementActivity extends AppCompatActivity {
                     String foodName = c.getString(5);
                     int qty = c.getInt(6);
 
-                    OrderData od = map.get(billId);
+                   OrderData od = map.get(billId);
                     if (od == null) {
                         od = new OrderData(billId, buyerName, date, total, status);
                         map.put(billId, od);
@@ -102,7 +100,7 @@ public class OrderManagementActivity extends AppCompatActivity {
             c.close();
 
             if (map.isEmpty()) {
-                Toast.makeText(this, "Không có đơn hàng nào", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Không có đơn hàng nào", Toast.LENGTH_SHORT).show();
             } else {
                 for (OrderData od : map.values()) {
                     addOrderView(od.billId, od.buyerName, od.date, od.total, od.status, od.items.toString().trim());
@@ -110,7 +108,7 @@ public class OrderManagementActivity extends AppCompatActivity {
             }
 
         } catch (Exception e) {
-            Toast.makeText(this, "Lỗi khi tải đơn hàng: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(requireContext(), "Lỗi khi tải đơn hàng: " + e.getMessage(), Toast.LENGTH_LONG).show();
         } finally {
             db.close();
         }
@@ -118,7 +116,7 @@ public class OrderManagementActivity extends AppCompatActivity {
 
     // ✅ thêm tham số items để hiển thị danh sách sản phẩm
     private void addOrderView(int billId, String buyerName, String date, double total, String status, String items) {
-        View v = LayoutInflater.from(this).inflate(R.layout.item_order, containerOrders, false);
+        View v = LayoutInflater.from(requireContext()).inflate(R.layout.item_order, containerOrders, false);
 
         TextView tvOrderId = v.findViewById(R.id.tvOrderId);
         TextView tvBuyerName = v.findViewById(R.id.tvBuyerName);
@@ -139,7 +137,7 @@ public class OrderManagementActivity extends AppCompatActivity {
 
         int curPos = Arrays.asList(statusList).indexOf(currentStatus[0]);
 
-        ArrayAdapter<String> adp = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statusList) {
+        ArrayAdapter<String> adp = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, statusList) {
             @Override
             public boolean isEnabled(int position) {
                 if (position == curPos) return true; // enable trạng thái hiện tại
@@ -188,7 +186,7 @@ public class OrderManagementActivity extends AppCompatActivity {
 
                 // Chặn chuyển sai
                 if (!isValidStatusTransition(currentStatus[0], picked)) {
-                    Toast.makeText(OrderManagementActivity.this,
+                    Toast.makeText(requireContext(),
                             "Không thể chuyển từ " + currentStatus[0] + " sang " + picked, Toast.LENGTH_SHORT).show();
                     spinnerStatus.setSelection(Arrays.asList(statusList).indexOf(currentStatus[0]), false);
                     return;
@@ -198,11 +196,11 @@ public class OrderManagementActivity extends AppCompatActivity {
                 if (dbHelper.updateOrderStatus(billId, picked)) {
                     currentStatus[0] = picked; // cập nhật biến trạng thái hiện tại
                     refreshCancelButton(btnCancel, picked);
-                    Toast.makeText(OrderManagementActivity.this,
+                    Toast.makeText(requireContext(),
                             "Đã cập nhật đơn #" + billId + " sang " + picked, Toast.LENGTH_SHORT).show();
 
                     // Cập nhật lại enable/disable của các lựa chọn theo trạng thái mới
-                    ArrayAdapter<String> newAdapter = new ArrayAdapter<>(OrderManagementActivity.this, android.R.layout.simple_spinner_item, statusList) {
+                    ArrayAdapter<String> newAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, statusList) {
                         @Override
                         public boolean isEnabled(int pos) {
                             if (pos == Arrays.asList(statusList).indexOf(currentStatus[0])) return true;
@@ -228,7 +226,7 @@ public class OrderManagementActivity extends AppCompatActivity {
                     spinnerStatus.setAdapter(newAdapter);
                     spinnerStatus.setSelection(Arrays.asList(statusList).indexOf(currentStatus[0]), false);
                 } else {
-                    Toast.makeText(OrderManagementActivity.this,
+                    Toast.makeText(requireContext(),
                             "Lỗi: không thể cập nhật đơn #" + billId, Toast.LENGTH_SHORT).show();
                     // rollback UI
                     spinnerStatus.setSelection(Arrays.asList(statusList).indexOf(currentStatus[0]), false);
@@ -243,18 +241,18 @@ public class OrderManagementActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(view -> {
             // ✅ kiểm tra theo trạng thái hiện tại (không dùng biến status cũ nữa)
             if (!"Chờ xác nhận".equalsIgnoreCase(currentStatus[0])) {
-                Toast.makeText(this, "Chỉ hủy được khi đang ở trạng thái Chờ xác nhận", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Chỉ hủy được khi đang ở trạng thái Chờ xác nhận", Toast.LENGTH_SHORT).show();
                 return;
             }
-            new AlertDialog.Builder(OrderManagementActivity.this)
+            new AlertDialog.Builder(requireContext())
                     .setTitle("Xác nhận hủy đơn")
                     .setMessage("Bạn có chắc muốn hủy đơn #" + billId + "?")
                     .setPositiveButton("Có", (dialog, which) -> {
                         if (dbHelper.cancelOrder(billId)) {
-                            Toast.makeText(this, "Đã hủy đơn #" + billId, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), "Đã hủy đơn #" + billId, Toast.LENGTH_SHORT).show();
                             showOrders(); // reload để đồng bộ UI
                         } else {
-                            Toast.makeText(this, "Lỗi: không thể hủy đơn #" + billId, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), "Lỗi: không thể hủy đơn #" + billId, Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNegativeButton("Không", null)
@@ -295,15 +293,15 @@ public class OrderManagementActivity extends AppCompatActivity {
     }
 
     // Dữ liệu gom cho một bill
-    public static class OrderData {
+    private static class OrderData {
         int billId;
         String buyerName;
         String date;
         double total;
         String status;
-        public StringBuilder items = new StringBuilder();
+        StringBuilder items = new StringBuilder();
 
-        public OrderData(int billId, String buyerName, String date, double total, String status) {
+        OrderData(int billId, String buyerName, String date, double total, String status) {
             this.billId = billId;
             this.buyerName = buyerName;
             this.date = date;
@@ -311,4 +309,5 @@ public class OrderManagementActivity extends AppCompatActivity {
             this.status = status;
         }
     }
+
 }

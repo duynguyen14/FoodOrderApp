@@ -3,23 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation2"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_revenue">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.myapplication.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/nav_revenue"
+        android:name="com.example.myapplication.ui.revenue.AdminHomeFragment"
+        android:label="Thống kê doanh thu"
+        tools:layout="@layout/fragment_admin_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.myapplication.ui.gallery.DailyMeatFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/daily_meet_fragment" />
+        android:id="@+id/nav_account_management"
+        android:name="com.example.myapplication.ui.user.UserFragment"
+        android:label="Quản lý tài khoản"
+        tools:layout="@layout/fragment_user" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.myapplication.ui.slideshow.FavouriteFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_favorite" />
+        android:id="@+id/nav_product_management"
+        android:name="com.example.myapplication.ui.product_management.ProductFragment"
+        android:label="Quản lý món ăn"
+        tools:layout="@layout/fragment_product" />
+    <fragment
+        android:id="@+id/nav_order_management"
+        android:name="com.example.myapplication.ui.order.OrderFragment"
+        android:label="Quản lý đơn hàng"
+        tools:layout="@layout/fragment_product"/>
 </navigation>

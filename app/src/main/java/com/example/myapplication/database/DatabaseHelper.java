@@ -19,8 +19,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+    int imageResId1 = R.drawable.breakfast;
+    int imageResId2 = R.drawable.burger2;
+    int imageResId3 = R.drawable.burger4;
+    int imageResId4 = R.drawable.coffe;
     private static final String DATABASE_NAME = "app_db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 9;
 
     // Bảng Users
     public static final String TABLE_USER = "users";
@@ -345,6 +349,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
                 ") VALUES (5, 'Sandwich', 34.0, " + R.drawable.sandwich4 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + "," +
+                COLUMN_FOOD_NAME + "," +
+                COLUMN_FOOD_PRICE + "," +
+                COLUMN_FOOD_IMAGE + "," +
+                COLUMN_FOOD_DESCRIPTION + "," +
+                COLUMN_FOOD_QUANTITY + "," +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (1,'Phở bò',50000," + imageResId1 + ",'Phở bò thơm ngon đặc biệt','100','20')");
+
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + "," +
+                COLUMN_FOOD_NAME + "," +
+                COLUMN_FOOD_PRICE + "," +
+                COLUMN_FOOD_IMAGE + "," +
+                COLUMN_FOOD_DESCRIPTION + "," +
+                COLUMN_FOOD_QUANTITY + "," +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (2,'Nước cam',30000," + imageResId2 + ",'Nước cam tươi mát lạnh','200','50')");
+
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + "," +
+                COLUMN_FOOD_NAME + "," +
+                COLUMN_FOOD_PRICE + "," +
+                COLUMN_FOOD_IMAGE + "," +
+                COLUMN_FOOD_DESCRIPTION + "," +
+                COLUMN_FOOD_QUANTITY + "," +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (3,'Bánh mì thịt',20000, " + imageResId3 + ",'Bánh mì thịt nóng giòn','150','40')");
+
+        db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
+                COLUMN_CATEGORY_ID + "," +
+                COLUMN_FOOD_NAME + "," +
+                COLUMN_FOOD_PRICE + "," +
+                COLUMN_FOOD_IMAGE + "," +
+                COLUMN_FOOD_DESCRIPTION + "," +
+                COLUMN_FOOD_QUANTITY + "," +
+                COLUMN_FOOD_SOLID_COUNT +
+                ") VALUES (4,'Chè đậu xanh',25000, " + imageResId4 + " ,'Chè đậu xanh ngọt mát','120','30')");
 
         // SHOPPING CART
         db.execSQL("CREATE TABLE " + TABLE_CART + " (" +
@@ -485,6 +528,88 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_BILL_DETAIL_QUANTITY + " INTEGER, " +
                 "FOREIGN KEY(" + COLUMN_BILL_ID + ") REFERENCES " + TABLE_BILL + "(" + COLUMN_BILL_ID + "), " +
                 "FOREIGN KEY(" + COLUMN_FOOD_ID + ") REFERENCES " + TABLE_FOOD + "(" + COLUMN_FOOD_ID + "))");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (2,'2025-08-01',100000,'Chờ xác nhận')");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (3,'2025-08-02',75000,'Xác nhận')");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (4,'2025-08-03',95000,'Đang giao')");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (2,'2025-08-04',125000,'Đã giao')");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (3,'2025-08-05',60000,'Hủy')");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (4,'2025-08-06',150000,'Chờ xác nhận')");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (2,'2025-08-07',85000,'Xác nhận')");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (3,'2025-08-08',105000,'Đang giao')");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (4,'2025-08-09',200000,'Đã giao')");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL + " (" +
+                COLUMN_USER_ID + "," + COLUMN_BILL_DATE + "," + COLUMN_BILL_TOTAL + "," + COLUMN_BILL_STATUS +
+                ") VALUES (2,'2025-08-10',50000,'Hủy')");
+
+// ========== BILL DETAIL ==========
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (1,1,2)");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (2,2,1)");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (3,3,2)");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (4,4,3)");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (5,1,1)");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (6,2,2)");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (7,3,1)");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (8,4,2)");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (9,1,4)");
+
+        db.execSQL("INSERT INTO " + TABLE_BILL_DETAIL + " (" +
+                COLUMN_BILL_ID + "," + COLUMN_FOOD_ID + "," + COLUMN_BILL_DETAIL_QUANTITY +
+                ") VALUES (10,2,1)");
+
     }
 
     @Override
