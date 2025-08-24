@@ -6,13 +6,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.myapplication.R;
 import com.example.myapplication.models.HomeHorModel;
 import com.example.myapplication.models.HomeVerModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "app_db";
@@ -610,6 +614,165 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return list;
     }
+    public boolean updateOrderStatus(int orderId, String status) {
+        Log.d("OrderManagement", "BẮT ĐẦU updateOrderStatus với orderId=" + orderId + ", status=" + status);
 
 
+        SQLiteDatabase db = this.getWritableDatabase();
+        Log.d("OrderManagement", "Đã lấy được database");
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_BILL_STATUS, status);
+        Log.d("OrderManagement", "Đã set ContentValues");
+
+        int rows = 0;
+        try {
+            rows = db.update(TABLE_BILL, values, COLUMN_BILL_ID + "=?", new String[]{String.valueOf(orderId)});
+            Log.d("OrderManagement", "Cập nhật đơn #" + orderId + " sang " + status + ", rows: " + rows);
+        } catch (Exception e) {
+            Log.e("OrderManagement", "Lỗi cập nhật đơn #" + orderId + ": " + e.getMessage());
+        } finally {
+            db.close();
+        }
+        return rows > 0;
+    }
+
+    // Hủy đơn (set trạng thái = "Hủy")
+    public boolean cancelOrder(int orderId) {
+        return updateOrderStatus(orderId, "Hủy");
+    }
+    public Cursor getProductsByPage(int page, int pageSize) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int offset = (page - 1) * pageSize;
+        return db.rawQuery("SELECT * FROM " + TABLE_FOOD + " LIMIT ? OFFSET ?",
+                new String[]{String.valueOf(pageSize), String.valueOf(offset)});
+    }
+
+    // Lấy tổng số sản phẩm
+    public int getTotalProducts() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_FOOD, null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        return count;
+    }
+    // Xóa sản phẩm
+    public int deleteFood(int foodId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_FOOD, COLUMN_FOOD_ID + "=?", new String[]{String.valueOf(foodId)});
+    }
+    public long insertFood(int categoryId, String foodName, double price, int image, String description, int quantity, int soldCount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_ID, categoryId);
+        values.put(COLUMN_FOOD_NAME, foodName);
+        values.put(COLUMN_FOOD_PRICE, price);
+        values.put(COLUMN_FOOD_IMAGE, image);
+        values.put(COLUMN_FOOD_DESCRIPTION, description);
+        values.put(COLUMN_FOOD_QUANTITY, quantity);
+        values.put(COLUMN_FOOD_SOLID_COUNT, soldCount);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+        values.put(COLUMN_FOOD_TIME, currentDate);
+        return db.insert(TABLE_FOOD, null, values);
+    }
+    public int updateFood(int foodId, int categoryId, String foodName, double price, int image, String description, int quantity, int soldCount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_ID, categoryId);
+        values.put(COLUMN_FOOD_NAME, foodName);
+        values.put(COLUMN_FOOD_PRICE, price);
+        values.put(COLUMN_FOOD_IMAGE, image);
+        values.put(COLUMN_FOOD_DESCRIPTION, description);
+        values.put(COLUMN_FOOD_QUANTITY, quantity);
+        values.put(COLUMN_FOOD_SOLID_COUNT, soldCount);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+        values.put(COLUMN_FOOD_TIME, currentDate);
+        return db.update(TABLE_FOOD, values, COLUMN_FOOD_ID + "=?", new String[]{String.valueOf(foodId)});
+    }
+    // Thống kê doanh thu theo tháng
+    public Cursor getRevenueByMonth(String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT strftime('%Y-%m', " + COLUMN_BILL_DATE + ") AS Period, " +
+                "SUM(" + COLUMN_BILL_TOTAL + ") AS TotalRevenue " +
+                "FROM " + TABLE_BILL + " " +
+                "WHERE " + COLUMN_BILL_DATE + " BETWEEN ? AND ? " +
+                "AND " + COLUMN_BILL_STATUS + " = 'Đã giao' " +
+                "GROUP BY strftime('%Y-%m', " + COLUMN_BILL_DATE + ") " +
+                "ORDER BY Period";
+        return db.rawQuery(query, new String[]{startDate, endDate});
+    }
+
+    // Thống kê doanh thu theo ngày
+    public Cursor getRevenueByDay(String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT strftime('%Y-%m-%d', " + COLUMN_BILL_DATE + ") AS Period, " +
+                "SUM(" + COLUMN_BILL_TOTAL + ") AS TotalRevenue " +
+                "FROM " + TABLE_BILL + " " +
+                "WHERE " + COLUMN_BILL_DATE + " BETWEEN ? AND ? " +
+                "AND " + COLUMN_BILL_STATUS + " = 'Đã giao' " +
+                "GROUP BY strftime('%Y-%m-%d', " + COLUMN_BILL_DATE + ") " +
+                "ORDER BY Period";
+        return db.rawQuery(query, new String[]{startDate, endDate});
+    }
+
+
+    // Thống kê doanh thu theo danh mục
+    public Cursor getRevenueByCategory(String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT c." + COLUMN_CATEGORY_NAME + ", SUM(b." + COLUMN_BILL_TOTAL + ") AS TotalRevenue " +
+                "FROM " + TABLE_BILL + " b " +
+                "JOIN " + TABLE_BILL_DETAIL + " bd ON b." + COLUMN_BILL_ID + " = bd." + COLUMN_BILL_ID + " " +
+                "JOIN " + TABLE_FOOD + " f ON bd." + COLUMN_FOOD_ID + " = f." + COLUMN_FOOD_ID + " " +
+                "JOIN " + TABLE_CATEGORY + " c ON f." + COLUMN_CATEGORY_ID + " = c." + COLUMN_CATEGORY_ID + " " +
+                "WHERE b." + COLUMN_BILL_DATE + " BETWEEN ? AND ? " +
+                "AND b." + COLUMN_BILL_STATUS + " = 'Đã giao' " +
+                "GROUP BY c." + COLUMN_CATEGORY_ID + " " +
+                "ORDER BY TotalRevenue DESC";
+        return db.rawQuery(query, new String[]{startDate, endDate});
+    }
+
+
+    public Cursor getBestSellingProducts(int limit, String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT f." + COLUMN_FOOD_ID + ", f." + COLUMN_FOOD_NAME + ", f." + COLUMN_FOOD_PRICE + ", f."
+                + COLUMN_FOOD_IMAGE + ", f." + COLUMN_CATEGORY_ID + ", "
+                + "SUM(bd." + COLUMN_BILL_DETAIL_QUANTITY + ") AS TotalQuantity "
+                + "FROM " + TABLE_BILL_DETAIL + " bd "
+                + "JOIN " + TABLE_BILL + " b ON bd." + COLUMN_BILL_ID + " = b." + COLUMN_BILL_ID + " "
+                + "JOIN " + TABLE_FOOD + " f ON bd." + COLUMN_FOOD_ID + " = f." + COLUMN_FOOD_ID + " "
+                + "WHERE b." + COLUMN_BILL_DATE + " BETWEEN ? AND ? "
+                + "AND b." + COLUMN_BILL_STATUS + " = 'Đã giao' "
+                + "GROUP BY bd." + COLUMN_FOOD_ID + " "
+                + "ORDER BY TotalQuantity DESC "
+                + "LIMIT ?";
+        return db.rawQuery(query, new String[]{startDate, endDate, String.valueOf(limit)});
+    }
+
+
+
+    public int getTotalQuantitySold(String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        int totalQuantity = 0;
+        try {
+            String query = "SELECT SUM(" + COLUMN_BILL_DETAIL_QUANTITY + ") FROM " + TABLE_BILL_DETAIL + " bd " +
+                    "JOIN " + TABLE_BILL + " b ON bd." + COLUMN_BILL_ID + " = b." + COLUMN_BILL_ID +
+                    " WHERE b." + COLUMN_BILL_DATE + " BETWEEN ? AND ? " +
+                    "AND b." + COLUMN_BILL_STATUS + " = 'Đã giao'";
+            cursor = db.rawQuery(query, new String[]{startDate, endDate});
+            if (cursor.moveToFirst()) {
+                totalQuantity = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return totalQuantity;
+    }
 }

@@ -21,6 +21,9 @@
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".UserManagementActivity" />
         <activity android:name=".OrderManagementActivity" />
+        <activity android:name=".ui.revenue.RevenueActivity"/>
+        <activity android:name=".ui.product_management.ProductManagement" />
+        <activity android:name=".ui.product_management.ProductUpdate" />
 
         <activity
             android:name=".LauncherActivity"
