@@ -19,6 +19,9 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.database.DatabaseHelper;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     private Context context;
@@ -75,7 +78,7 @@ public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
     String categoryName = getCategoryName(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID)));
 
     holder.tvName.setText(name);
-    holder.tvPrice.setText(String.format("$%.2f", price));
+    holder.tvPrice.setText( NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(price));
     holder.tvDescription.setText(description);
     holder.tvCategoryName.setText(categoryName);
     holder.tvQuantity.setText(String.valueOf(quantity));

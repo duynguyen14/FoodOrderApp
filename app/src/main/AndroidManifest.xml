@@ -26,6 +26,7 @@
         <activity android:name=".ui.revenue.RevenueActivity" />
         <activity android:name=".ui.product_management.ProductManagement" />
         <activity android:name=".ui.product_management.ProductUpdate" />
+        <activity android:name=".ProfileActivity"/>
         <activity
             android:name=".LauncherActivity"
             android:exported="true">

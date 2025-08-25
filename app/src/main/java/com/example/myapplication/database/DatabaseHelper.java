@@ -14,6 +14,7 @@ import com.example.myapplication.models.HomeHorModel;
 import com.example.myapplication.models.HomeVerModel;
 import com.example.myapplication.models.OrderModel;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -166,7 +167,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-
         // FOOD
         db.execSQL("CREATE TABLE " + TABLE_FOOD + " (" +
                 COLUMN_FOOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -188,7 +188,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (1, 'Pizza', 34.0, " + R.drawable.pizza1 + ", '10:00-23:00', 'Delicious cheese pizza', '1', '0')");
+                ") VALUES (1, 'Pizza', 34000.0, " + R.drawable.pizza1 + ", '10:00-23:00', 'Delicious cheese pizza', '1', '0')");
 
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
@@ -199,7 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (1, 'Pizza', 34.0, " + R.drawable.pizza2 + ", '10:00-23:00', 'Delicious cheese pizza', '1', '0')");
+                ") VALUES (1, 'Pizza', 34000.0, " + R.drawable.pizza2 + ", '10:00-23:00', 'Delicious cheese pizza', '1', '0')");
 
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
@@ -210,7 +210,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (1, 'Pizza', 34.0, " + R.drawable.pizza3 + ", '10:00-23:00', 'Delicious cheese pizza', '1', '0')");
+                ") VALUES (1, 'Pizza', 34000.0, " + R.drawable.pizza3 + ", '10:00-23:00', 'Delicious cheese pizza', '1', '0')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -220,7 +220,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (2, 'HamBurger', 34.0, " + R.drawable.burger2 + ", '10:00-23:00', 'Delicious cheese hambuger', '100', '20')");
+                ") VALUES (2, 'HamBurger', 34000.0, " + R.drawable.burger2 + ", '10:00-23:00', 'Delicious cheese hambuger', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -230,7 +230,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (2, 'HamBurger', 34.0, " + R.drawable.burger4 + ", '10:00-23:00', 'Delicious cheese hambuger', '100', '20')");
+                ") VALUES (2, 'HamBurger', 34000.0, " + R.drawable.burger4 + ", '10:00-23:00', 'Delicious cheese hambuger', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -240,7 +240,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (3, 'Fries', 34.0, " + R.drawable.fries1 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
+                ") VALUES (3, 'Fries', 34000.0, " + R.drawable.fries1 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -250,7 +250,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (3, 'Fries', 34.0, " + R.drawable.fries2 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
+                ") VALUES (3, 'Fries', 34000.0, " + R.drawable.fries2 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -260,7 +260,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (3, 'Fries', 34.0, " + R.drawable.fries3 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
+                ") VALUES (3, 'Fries', 34000.0, " + R.drawable.fries3 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -270,7 +270,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (3, 'Fries', 34.0, " + R.drawable.fries4 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
+                ") VALUES (3, 'Fries', 34000.0, " + R.drawable.fries4 + ", '10:00-23:00', 'Delicious cheese fries', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -280,7 +280,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (4, 'Cream', 34.0, " + R.drawable.icecream1 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
+                ") VALUES (4, 'Cream', 34000.0, " + R.drawable.icecream1 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -290,7 +290,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (4, 'Cream', 34.0, " + R.drawable.icecream2 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
+                ") VALUES (4, 'Cream', 34000.0, " + R.drawable.icecream2 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -300,7 +300,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (4, 'Cream', 34.0, " + R.drawable.icecream3 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
+                ") VALUES (4, 'Cream', 34000.0, " + R.drawable.icecream3 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -310,7 +310,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (4, 'Cream', 34.0, " + R.drawable.icecream4 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
+                ") VALUES (4, 'Cream', 34000.0, " + R.drawable.icecream4 + ", '10:00-23:00', 'Delicious cheese cream', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -320,7 +320,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (5, 'Sandwich', 34.0, " + R.drawable.sandwich1 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
+                ") VALUES (5, 'Sandwich', 34000.0, " + R.drawable.sandwich1 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -330,7 +330,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (5, 'Sandwich', 34.0, " + R.drawable.sandwich2 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
+                ") VALUES (5, 'Sandwich', 34000.0, " + R.drawable.sandwich2 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -340,7 +340,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (5, 'Sandwich', 34.0, " + R.drawable.sandwich3 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
+                ") VALUES (5, 'Sandwich', 34000.0, " + R.drawable.sandwich3 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + ", " +
                 COLUMN_FOOD_NAME + ", " +
@@ -350,7 +350,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_FOOD_DESCRIPTION + ", " +
                 COLUMN_FOOD_QUANTITY + ", " +
                 COLUMN_FOOD_SOLID_COUNT +
-                ") VALUES (5, 'Sandwich', 34.0, " + R.drawable.sandwich4 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
+                ") VALUES (5, 'Sandwich', 34000.0, " + R.drawable.sandwich4 + ", '10:00-23:00', 'Delicious cheese Sandwich', '100', '20')");
         db.execSQL("INSERT INTO " + TABLE_FOOD + " (" +
                 COLUMN_CATEGORY_ID + "," +
                 COLUMN_FOOD_NAME + "," +
@@ -742,9 +742,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                 @SuppressLint("DefaultLocale")
                 String rating = String.format("%.1f", avgRating);
-                String price = "Min- " + priceValue + "$";
+                String priceStr = "Giá - " + NumberFormat.getInstance(new Locale("vi", "VN")).format(priceValue) + "đ";
 
-                list.add(new HomeVerModel(id, image, name, time, rating, price, quantity)); // Cần sửa lại HomeVerModel để nhận thêm tham số quantity
+
+                list.add(new HomeVerModel(id, image, name, time, rating, priceStr, quantity)); // Cần sửa lại HomeVerModel để nhận thêm tham số quantity
             } while (cursor.moveToNext());
             cursor.close();
         }
@@ -1075,12 +1076,38 @@ public boolean updateOrderStatus(int orderId, String status) {
     }
 
 
-
-
     // Thêm sản phẩm vào yêu thích
     public void addFavorite(int userId, int productId) {
-
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_ID, userId);
+        values.put(COLUMN_FOOD_ID, productId);
+        try {
+            db.insertOrThrow(TABLE_FAVORITE, null, values);
+            Log.d("DatabaseHelper", "Đã thêm sản phẩm " + productId + " vào danh sách yêu thích của người dùng " + userId);
+        } catch (android.database.SQLException e) {
+            Log.e("DatabaseHelper", "Lỗi khi thêm vào danh sách yêu thích: " + e.getMessage());
+            // Có thể sản phẩm đã tồn tại, nên không cần xử lý thêm ngoại lệ
+        } finally {
+            db.close();
+        }
     }
+
+    // Phương thức mới để lấy danh sách sản phẩm yêu thích
+    public Cursor getFavoriteFoodsByUserId(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT f.* FROM " + TABLE_FAVORITE + " fav "
+                + "JOIN " + TABLE_FOOD + " f ON fav." + COLUMN_FOOD_ID + " = f." + COLUMN_FOOD_ID
+                + " WHERE fav." + COLUMN_USER_ID + " = ?";
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
+    }
+
+    // Phương thức mới để xóa sản phẩm yêu thích
+    public int deleteFavorite(int userId, int foodId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_FAVORITE, COLUMN_USER_ID + "=? AND " + COLUMN_FOOD_ID + "=?", new String[]{String.valueOf(userId), String.valueOf(foodId)});
+    }
+
     // Lấy danh sách bill theo userId
     public List<OrderModel> getBillsByUserId(int userId) {
         List<OrderModel> billList = new ArrayList<>();

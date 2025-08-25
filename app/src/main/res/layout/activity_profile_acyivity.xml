@@ -237,7 +237,7 @@
         <!-- Nút cập nhật -->
         <Button
             android:id="@+id/btnUpdate"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/c_p_nh_t"
@@ -247,17 +247,7 @@
             android:layout_marginEnd="8dp"
             />
 
-        <!-- Nút đăng xuất -->
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/ng_xu_t"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/purple_500"
-            android:textColor="@android:color/white"
-            android:layout_marginStart="8dp"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

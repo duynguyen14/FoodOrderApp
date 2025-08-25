@@ -61,8 +61,7 @@ public class AdminHomeFragment extends Fragment {
             "Doanh thu theo tháng (Cột)",
             "Doanh thu theo tháng (Đường)",
             "Doanh thu theo ngày (Cột)",
-            "Doanh thu theo ngày (Đường)",
-            "Doanh thu theo danh mục (Tròn)"
+            "Doanh thu theo ngày (Đường)"
     };
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -186,7 +185,7 @@ public class AdminHomeFragment extends Fragment {
             return;
         }
 
-        BarDataSet dataSet = new BarDataSet(entries, "Doanh thu (USD)");
+        BarDataSet dataSet = new BarDataSet(entries, "Doanh thu (VND)");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
 
         BarData barData = new BarData(dataSet);
@@ -229,7 +228,7 @@ public class AdminHomeFragment extends Fragment {
             return;
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "Doanh thu (USD)");
+        LineDataSet dataSet = new LineDataSet(entries, "Doanh thu (VND)");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
         dataSet.setFillAlpha(110);
         dataSet.setDrawFilled(true);

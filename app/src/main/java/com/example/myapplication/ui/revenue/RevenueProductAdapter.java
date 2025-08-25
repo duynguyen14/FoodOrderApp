@@ -18,6 +18,9 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.database.DatabaseHelper;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class RevenueProductAdapter extends RecyclerView.Adapter<RevenueProductAdapter.ProductViewHolder> {
 
     private Context context;
@@ -65,7 +68,7 @@ public class RevenueProductAdapter extends RecyclerView.Adapter<RevenueProductAd
         int categoryId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CATEGORY_ID));
         String categoryName = getCategoryName(categoryId);
         holder.tvName.setText(name);
-        holder.tvPrice.setText(String.format("Giá: $%.2f", price));
+        holder.tvPrice.setText( NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(price));
         holder.tvCategoryName.setText("Danh mục: " + categoryName);
         holder.tvQuantity.setText("Số lượng bán: " + soldQuantity);
 
